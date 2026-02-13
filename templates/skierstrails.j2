@@ -8,7 +8,7 @@
     <thead>
         {# For the table header row, we print the DB attribute names #}
         <tr>
-            {% for key in skiers[0].keys() %}
+            {% for key in skierstrails[0].keys() %}
             <th>{{ key }}</th>
             {% endfor %}
             <th></th>
@@ -17,19 +17,17 @@
 
     <tbody>
         {# For each row, print the id, fname, lname, homeworld and age #}
-        {% for skier in skiers %}
+        {% for skier in skierstrails %}
         <tr>
-            <td>{{ skier.SkierID }}</td>
-            <td>{{ skier.Name}}</td>
-            <td>{{ skier.Address }}</td>
-            <td>{{ skier.Phone }}</td>
-            <td>{{ skier.Email }}</td>
-            <td>{{ skier.Ability }}</td>
+            <td>{{ skier.SkiersTrailsID }}</td>
+            <td>{{ skier.Skiers_SkierID}}</td>
+            <td>{{ skier.Trails_TrailID }}</td>
+            
 
             {# DELETE form #}
             <form id="delete_person_form">
-                <input type="hidden" name="delete_person_id" value="{{ skier.SkerID }}">
-                <input type="hidden" name="delete_person_name" value="{{ skier.Name }}">
+                <input type="hidden" name="delete_person_id" value="{{ skier.SkiersTrailsID }}">
+                <input type="hidden" name="delete_person_name" value="{{ skier.Skiers_SkierID }}">
                 <td>
                     <button type="submit">
                         Delete

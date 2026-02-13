@@ -36,10 +36,39 @@
                     </button>
                 </td>
             </form>
+            <form id="update_person_form">
+                <input type="hidden" name="update_person_id" value="{{ skier.SkerID }}">
+                <input type="hidden" name="update_person_name" value="{{ skier.Name }}">
+                <td>
+                    <button type="submit">
+                        Update
+                    </button>
+                </td>
+            </form>
         </tr>
         {% endfor %}
     </tbody>
 </table>
+<h2>Create a Skier</h2>
+<form class="cuForm" id="create_skier_form">
+    <label for="create_skier_name"> Name: </label>
+    <input type="text" name="create_skier_name" id="create_skier_name" required>
+    <label for="create_skier_address"> Address: </label>
+    <input type="text" name="create_skier_address" id="create_skier_address" required>
+    <label for="create_skier_phone"> Phone: </label>
+    <input type="text" name="create_skier_phone" id="create_skier_phone" required>
+    <label for="create_skier_email"> Email: </label>
+    <input type="email" name="create_skier_email" id="create_skier_email" required>
+    <label for="create_skier_ability"> Ability: </label>
+    <select name="create_skier_ability" id="create_skier_ability" required>
+        <option value="" disabled selected>Select ability level</option>
+        <option value="Beginner">Beginner</option>
+        <option value="Intermediate">Intermediate</option>
+        <option value="Expert">Expert</option>
+    </select>
+
+    <input type="submit">
+</form>
 
 
 {% endblock %}
