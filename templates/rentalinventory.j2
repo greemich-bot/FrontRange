@@ -1,0 +1,41 @@
+{% extends "main.j2" %}
+{% block content %}
+
+<h1>Rental Inventory</h1>
+
+{# READ table #}
+<table>
+    <thead>
+        {# For the table header row, we print the DB attribute names #}
+        <tr>
+            {% for key in rentalinventory[0].keys() %}
+            <th>{{ key }}</th>
+            {% endfor %}
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {# For each row, print the id, fname, lname, homeworld and age #}
+        {% for item in rentalinventory %}
+        <tr>
+            <td>{{ item.RentalID }}</td>
+            <td>{{ item.Type }}</td>
+
+            {# DELETE form #}
+            <form id="delete_person_form">
+                <input type="hidden" name="delete_person_id" value="{{ item.RentalID }}">
+                <input type="hidden" name="delete_person_name" value="{{ item.Type }}">
+                <td>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

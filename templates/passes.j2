@@ -1,0 +1,45 @@
+{% extends "main.j2" %}
+{% block content %}
+
+<h1>Passes</h1>
+
+{# READ table #}
+<table>
+    <thead>
+        {# For the table header row, we print the DB attribute names #}
+        <tr>
+            {% for key in passes[0].keys() %}
+            <th>{{ key }}</th>
+            {% endfor %}
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {# For each row, print the id, fname, lname, homeworld and age #}
+        {% for pass in passes %}
+        <tr>
+            <td>{{ pass.PassID }}</td>
+            <td>{{ pass.Type}}</td>
+            <td>{{ pass.PurchaseDate }}</td>
+            <td>{{ pass.ExpirationDate }}</td>
+            <td>{{ pass.Skiers_SkierID }}</td>
+            
+
+            {# DELETE form #}
+            <form id="delete_person_form">
+                <input type="hidden" name="delete_person_id" value="{{ pass.PassID }}">
+                <input type="hidden" name="delete_person_name" value="{{ pass.Type }}">
+                <td>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

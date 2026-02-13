@@ -1,0 +1,44 @@
+{% extends "main.j2" %}
+{% block content %}
+
+<h1>Trails</h1>
+
+{# READ table #}
+<table>
+    <thead>
+        {# For the table header row, we print the DB attribute names #}
+        <tr>
+            {% for key in trails[0].keys() %}
+            <th>{{ key }}</th>
+            {% endfor %}
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {# For each row, print the id, fname, lname, homeworld and age #}
+        {% for trail in trails %}
+        <tr>
+            <td>{{ trail.TrailID }}</td>
+            <td>{{ trail.TrailName}}</td>
+            <td>{{ trail.Difficulty }}</td>
+            <td>{{ trail.TrailLength }}</td>
+            <td>{{ trail.Status }}</td>
+
+            {# DELETE form #}
+            <form id="delete_person_form">
+                <input type="hidden" name="delete_person_id" value="{{ trail.TrailID }}">
+                <input type="hidden" name="delete_person_name" value="{{ trail.TrailName }}">
+                <td>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

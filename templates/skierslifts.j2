@@ -1,0 +1,45 @@
+{% extends "main.j2" %}
+{% block content %}
+
+<h1>Skiers Lifts</h1>
+
+{# READ table #}
+<table>
+    <thead>
+        {# For the table header row, we print the DB attribute names #}
+        <tr>
+            {% for key in skiers[0].keys() %}
+            <th>{{ key }}</th>
+            {% endfor %}
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {# For each row, print the id, fname, lname, homeworld and age #}
+        {% for skier in skiers %}
+        <tr>
+            <td>{{ skier.SkierID }}</td>
+            <td>{{ skier.Name}}</td>
+            <td>{{ skier.Address }}</td>
+            <td>{{ skier.Phone }}</td>
+            <td>{{ skier.Email }}</td>
+            <td>{{ skier.Ability }}</td>
+
+            {# DELETE form #}
+            <form id="delete_person_form">
+                <input type="hidden" name="delete_person_id" value="{{ skier.SkerID }}">
+                <input type="hidden" name="delete_person_name" value="{{ skier.Name }}">
+                <td>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}

@@ -52,8 +52,144 @@ def bsg_people():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+@app.route("/lifts", methods=["GET"])
+def lifts():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+
+        # Create and execute our queries
+        # In query1, we use a JOIN clause to display the names of the homeworlds,
+        #       instead of just ID values
+        query1 = "SELECT * FROM Lifts;"
+        
+        lifts = db.query(dbConnection, query1).fetchall()
+
+        # Render the lifts.j2 file, and also send the renderer
+        # a couple objects that contains lifts information
+        return render_template(
+            "lifts.j2", lifts=lifts      
+        )
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return "An error occurred while executing the database queries.", 500
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
 
 
+@app.route("/skiers", methods=["GET"])
+def skiers():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+
+        # Create and execute our queries
+        # In query1, we use a JOIN clause to display the names of the homeworlds,
+        #       instead of just ID values
+        query1 = "SELECT * FROM Skiers;"
+        
+        skiers = db.query(dbConnection, query1).fetchall()
+
+        # Render the skiers.j2 file, and also send the renderer
+        # a couple objects that contains skiers information
+        return render_template(
+            "skiers.j2", skiers=skiers      
+        )
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return "An error occurred while executing the database queries.", 500
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+
+
+@app.route("/passes", methods=["GET"])
+def passes():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+
+        # Create and execute our queries
+        # In query1, we use a JOIN clause to display the names of the homeworlds,
+        #       instead of just ID values
+        query1 = "SELECT * FROM Passes;"
+        
+        passes = db.query(dbConnection, query1).fetchall()
+
+        # Render the passes.j2 file, and also send the renderer
+        # a couple objects that contains passes information
+        return render_template(
+            "passes.j2", passes=passes      
+        )
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return "An error occurred while executing the database queries.", 500
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+
+@app.route("/rentalinventory", methods=["GET"])
+def rentalinventory():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+
+        # Create and execute our queries
+        # In query1, we use a JOIN clause to display the names of the homeworlds,
+        #       instead of just ID values
+        query1 = "SELECT * FROM RentalInventory;"
+        
+        rentalinventory = db.query(dbConnection, query1).fetchall()
+
+        # Render the rentalinventory.j2 file, and also send the renderer
+        # a couple objects that contains rentalinventory information
+        return render_template(
+            "rentalinventory.j2", rentalinventory=rentalinventory      
+        )
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return "An error occurred while executing the database queries.", 500
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+@app.route("/trails", methods=["GET"])
+def trails():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+
+        # Create and execute our queries
+        # In query1, we use a JOIN clause to display the names of the homeworlds,
+        #       instead of just ID values
+        query1 = "SELECT * FROM Trails;"
+        
+        trails = db.query(dbConnection, query1).fetchall()
+
+        # Render the trails.j2 file, and also send the renderer
+        # a couple objects that contains trails information
+        return render_template(
+            "trails.j2", trails=trails      
+        )
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return "An error occurred while executing the database queries.", 500
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
 # ########################################
 # ########## LISTENER
 

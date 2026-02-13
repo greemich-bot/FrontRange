@@ -1,0 +1,46 @@
+{% extends "main.j2" %}
+{% block content %}
+
+<h1>Lifts</h1>
+
+{# READ table #}
+<table>
+    <thead>
+        {# For the table header row, we print the DB attribute names #}
+        <tr>
+            {% for key in lifts[0].keys() %}
+            <th>{{ key }}</th>
+            {% endfor %}
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {# For each row, print the id, fname, lname, homeworld and age #}
+        {% for lift in lifts %}
+        <tr>
+            <td>{{ lift.LiftID }}</td>
+            <td>{{ lift.LiftNum }}</td>
+            <td>{{ lift.LiftName }}</td>
+            <td>{{ lift.TravelTime}}</td>
+            <td>{{ lift.ChairCapacity }}</td>
+            <td>{{ lift.Status }}</td>
+            <td>{{ lift.Altitude }}</td>
+
+            {# DELETE form #}
+            <form id="delete_person_form">
+                <input type="hidden" name="delete_person_id" value="{{ lift.LiftID }}">
+                <input type="hidden" name="delete_person_name" value="{{ lift.Name }}">
+                <td>
+                    <button type="submit">
+                        Delete
+                    </button>
+                </td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+{% endblock %}
