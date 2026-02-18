@@ -1,0 +1,14 @@
+{% extends "main.j2" %}
+{% block content %}
+<h2>Update Rental #{{ rental.SkiersRentalsID }}</h2>
+<form method="POST">
+    <label>Skier ID:</label>
+    <input type="number" name="skier_id" value="{{ rental.Skiers_SkierID }}">
+    
+    <label>Inventory ID:</label>
+    <input type="number" name="inventory_id" value="{{ rental.RentalInventory_RentalID }}">
+    
+    <button type="submit">Save Changes</button>
+    <a href="/skiersrentals">Cancel</a>
+</form>
+{% endblock %}

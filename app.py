@@ -222,6 +222,28 @@ def skiersrentals():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+@app.route('/edit_rental/<int:rental_id>', methods=['GET', 'POST'])
+def edit_rental(rental_id):
+    dbConnection = db.connectDB()
+    
+    if request.method == 'GET':
+        # Fetch the specific rental to pre-populate the form
+        query = "SELECT * FROM SkiersRentals WHERE SkiersRentalsID = %s;"
+        rental_data = db.query(dbConnection, query, (rental_id,)).fetchone()
+        return render_template('edit_rental.j2', rental=rental_data)
+
+    if request.method == 'POST':
+        # Get data from the submitted form
+        skier_id = request.form['skier_id']
+        inventory_id = request.form['inventory_id']
+        
+        # Execute the update
+        query = "UPDATE SkiersRentals SET Skiers_SkierID = %s, RentalInventory_RentalID = %s WHERE SkiersRentalsID = %s;"
+        db.query(dbConnection, query, (skier_id, inventory_id, rental_id))
+        
+        return redirect("/skiersrentals")
+
+
 
 @app.route("/trails", methods=["GET"])
 def trails():
