@@ -88,7 +88,15 @@ def skierslifts():
         # Create and execute our queries
         # In query1, we use a JOIN clause to display the names of the homeworlds,
         #       instead of just ID values
-        query1 = "SELECT * FROM SkiersLifts;"
+        query1 = """
+            SELECT 
+                SkiersLifts.SkiersLiftsID, 
+                Skiers.Name AS SkierName, 
+                Lifts.LiftName AS LiftName
+            FROM SkiersLifts
+            INNER JOIN Skiers ON SkiersLifts.Skiers_SkierID = Skiers.SkierID
+            INNER JOIN Lifts ON SkiersLifts.Lifts_LiftID = Lifts.LiftID;
+        """
         
         skierslifts = db.query(dbConnection, query1).fetchall()
 
@@ -281,7 +289,15 @@ def skierstrails():
         # Create and execute our queries
         # In query1, we use a JOIN clause to display the names of the homeworlds,
         #       instead of just ID values
-        query1 = "SELECT * FROM SkiersTrails;"
+        query1 = """
+            SELECT 
+                SkiersTrails.SkiersTrailsID, 
+                Skiers.Name AS SkierName, 
+                Trails.TrailName AS TrailName
+            FROM SkiersTrails
+            INNER JOIN Skiers ON SkiersTrails.Skiers_SkierID = Skiers.SkierID
+            INNER JOIN Trails ON SkiersTrails.Trails_TrailID = Trails.TrailID;
+        """
         
         skierstrails = db.query(dbConnection, query1).fetchall()
 

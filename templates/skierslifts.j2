@@ -6,12 +6,12 @@
 {# READ table #}
 <table>
     <thead>
-        {# For the table header row, we print the DB attribute names #}
+        
         <tr>
-            {% for key in skierslifts[0].keys() %}
-            <th>{{ key }}</th>
-            {% endfor %}
-            <th></th>
+            <th>ID</th>
+            <th>Skier Name</th>
+            <th>Lift Name</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
@@ -20,29 +20,20 @@
         {% for skier in skierslifts %}
         <tr>
             <td>{{ skier.SkiersLiftsID }}</td>
-            <td>{{ skier.Lifts_LiftID}}</td>
-            <td>{{ skier.Skiers_SkierID }}</td>
+            <td>{{ skier.SkierName }}</td>
+            <td>{{ skier.LiftName }}</td>
             
 
             {# DELETE form #}
             <form id="delete_skierlift_form">
                 <input type="hidden" name="delete_skierlift_id" value="{{ skier.SkiersLiftsID }}">
-                <input type="hidden" name="delete_skierlift_name" value="{{ skier.Skiers_SkierID }}">
+                <input type="hidden" name="delete_skierlift_name" value="{{ skier.SkierName }}">
                 <td>
                     <button type="submit">
                         Delete
                     </button>
                 </td>
             </form>
-            <form id="update_skierlift_form">
-                <input type="hidden" name="update_skierlift_id" value="{{ skier.SkiersLiftsID }}">
-                <input type="hidden" name="update_skierlift_lift_id" value="{{ skier.Lifts_LiftID }}"> 
-                <input type="hidden" name="update_skierlift_skier_id" value="{{ skier.Skiers_SkierID }}">
-                <td>
-                    <button type="submit">
-                        Update
-                    </button>
-                </td>
         </tr>
         {% endfor %}
     </tbody>

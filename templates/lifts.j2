@@ -29,26 +29,12 @@
             <td>{{ lift.Altitude }}</td>
 
             {# DELETE form #}
-            <form id="delete_person_form">
-                <input type="hidden" name="delete_person_id" value="{{ lift.LiftID }}">
-                <input type="hidden" name="delete_person_name" value="{{ lift.Name }}">
+            <form id="delete_lift_form">
+                <input type="hidden" name="delete_lift_id" value="{{ lift.LiftID }}">
+                <input type="hidden" name="delete_lift_name" value="{{ lift.LiftName }}">
                 <td>
                     <button type="submit">
                         Delete
-                    </button>
-                </td>
-            </form>
-        {# UPDATE form #}
-            <form id="delete_person_form">
-                <input type="hidden" name="update_person_id" value="{{ lift.LiftID }}">
-                <input type="hidden" name="update_person_num" value="{{ lift.Num }}"> 
-                <input type="hidden" name="update_person_name" value="{{ lift.TravelTime }}">
-                <input type="hidden" name="update_person_name" value="{{ lift.ChairCapacity }}">
-                <input type="hidden" name="update_person_name" value="{{ lift.Status }}">
-                <input type="hidden" name="update_person_name" value="{{ lift.Altitude }}">
-                <td>
-                    <button type="submit">
-                        Update
                     </button>
                 </td>
             </form>

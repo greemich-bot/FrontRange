@@ -27,21 +27,21 @@
             
 
             {# DELETE form #}
-            <form id="delete_person_form">
-                <input type="hidden" name="delete_person_id" value="{{ pass.PassID }}">
-                <input type="hidden" name="delete_person_name" value="{{ pass.Type }}">
+            <form id="delete_pass_form">
+                <input type="hidden" name="delete_pass_id" value="{{ pass.PassID }}">
+                <input type="hidden" name="delete_pass_name" value="{{ pass.Type }}">
                 <td>
                     <button type="submit">
                         Delete
                     </button>
                 </td>
             </form>
-            <form id="update_person_form">
-                <input type="hidden" name="update_person_id" value="{{ pass.PassID }}">
-                <input type="hidden" name="update_person_type" value="{{ pass.Type }}"> 
-                <input type="hidden" name="update_person_purchase_date" value="{{ pass.PurchaseDate }}">
-                <input type="hidden" name="update_person_expiration_date" value="{{ pass.ExpirationDate }}">
-                <input type="hidden" name="update_person_skier_id" value="{{ pass.Skiers_SkierID }}">
+            <form id="update_pass_form">
+                <input type="hidden" name="update_pass_id" value="{{ pass.PassID }}">
+                <input type="hidden" name="update_pass_type" value="{{ pass.Type }}"> 
+                <input type="hidden" name="update_pass_purchase_date" value="{{ pass.PurchaseDate }}">
+                <input type="hidden" name="update_pass_expiration_date" value="{{ pass.ExpirationDate }}">
+                <input type="hidden" name="update_pass_skier_id" value="{{ pass.Skiers_SkierID }}">
                 <td>
                     <button type="submit">
                         Update
