@@ -3,46 +3,50 @@
 
 <h1>Skiers Rentals</h1>
 
-{# READ table #}
 <table>
     <thead>
-        {# For the table header row, we print the DB attribute names #}
         <tr>
-            {% for key in skiersrentals[0].keys() %}
-            <th>{{ key }}</th>
-            {% endfor %}
-            <th></th>
+            <th>ID</th>
+            <th>Skier Name</th>
+            <th>Rental Item</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
     <tbody>
-        {# For each row, print the id, fname, lname, homeworld and age #}
         {% for skier in skiersrentals %}
         <tr>
             <td>{{ skier.SkiersRentalsID }}</td>
-            <td>{{ skier.Skiers_SkierID }}</td>
-            <td>{{ skier.RentalInventory_RentalID }}</td>
-            
+            <td>{{ skier.SkierName }}</td>
+            <td>{{ skier.ItemType }}</td>
+            <td>
+                <div style="display: flex; gap: 10px;">
+                    <!-- Update Button -->
+                    <a href="{{ url_for('edit_rental', rental_id=skier.SkiersRentalsID) }}">
+                        <button type="button">Update</button>
+                    </a>
 
-            {# DELETE form #}
-            <form id="delete_person_form">
+                    <!-- Delete Form -->
+                    <form id="delete_person_form">
                 <input type="hidden" name="delete_person_id" value="{{ skier.SkiersRentalsID }}">
-                <input type="hidden" name="delete_person_name" value="{{ skier.Name }}">
+                <input type="hidden" name="delete_person_name" value="{{ skier.SkierName }}">
                 <td>
                     <button type="submit">
                         Delete
                     </button>
                 </td>
             </form>
-            <td>
-        <a href="{{ url_for('edit_rental', rental_id=skier.SkiersRentalsID) }}">
-            <button type="button">Update</button>
-        </a>
-            
+                </div>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">No rentals found in the system.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-
 {% endblock %}
+
+

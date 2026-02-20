@@ -198,29 +198,29 @@ def rentalinventory():
 @app.route("/skiersrentals", methods=["GET"])
 def skiersrentals():
     try:
-        dbConnection = db.connectDB()  # Open our database connection
-
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
-        query1 = "SELECT * FROM SkiersRentals;"
-        
-        skiersrentals = db.query(dbConnection, query1).fetchall()
-
-        # Render the skiersrentals.j2 file, and also send the renderer
-        # a couple objects that contains skiersrentals information
-        return render_template(
-            "skiersrentals.j2", skiersrentals=skiersrentals      
-        )
-
+        dbConnection = db.connectDB()
+        # The query MUST match the aliases used in your .j2 template
+        query = """
+            SELECT 
+                SkiersRentals.SkiersRentalsID, 
+                Skiers.Name AS SkierName, 
+                RentalInventory.Type AS ItemType
+            FROM SkiersRentals
+            JOIN Skiers ON SkiersRentals.Skiers_SkierID = Skiers.SkierID
+            JOIN RentalInventory ON SkiersRentals.RentalInventory_RentalID = RentalInventory.RentalID;
+        """
+        result = db.query(dbConnection, query).fetchall()
+        return render_template("skiersrentals.j2", skiersrentals=result)
     except Exception as e:
-        print(f"Error executing queries: {e}")
+        print(f"Error: {e}")
         return "An error occurred while executing the database queries.", 500
-
     finally:
-        # Close the DB connection, if it exists
-        if "dbConnection" in locals() and dbConnection:
+        if "dbConnection" in locals():
             dbConnection.close()
+
+
+
+
 
 @app.route('/edit_rental/<int:rental_id>', methods=['GET', 'POST'])
 def edit_rental(rental_id):

@@ -12,6 +12,7 @@
             <th>{{ key }}</th>
             {% endfor %}
             <th></th>
+            <th></th>
         </tr>
     </thead>
 
@@ -34,6 +35,20 @@
                 <td>
                     <button type="submit">
                         Delete
+                    </button>
+                </td>
+            </form>
+        {# UPDATE form #}
+            <form id="delete_person_form">
+                <input type="hidden" name="update_person_id" value="{{ lift.LiftID }}">
+                <input type="hidden" name="update_person_num" value="{{ lift.Num }}"> 
+                <input type="hidden" name="update_person_name" value="{{ lift.TravelTime }}">
+                <input type="hidden" name="update_person_name" value="{{ lift.ChairCapacity }}">
+                <input type="hidden" name="update_person_name" value="{{ lift.Status }}">
+                <input type="hidden" name="update_person_name" value="{{ lift.Altitude }}">
+                <td>
+                    <button type="submit">
+                        Update
                     </button>
                 </td>
             </form>
