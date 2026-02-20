@@ -36,6 +36,18 @@
                     </button>
                 </td>
             </form>
+            <form id="update_person_form">
+                <input type="hidden" name="update_person_id" value="{{ pass.PassID }}">
+                <input type="hidden" name="update_person_type" value="{{ pass.Type }}"> 
+                <input type="hidden" name="update_person_purchase_date" value="{{ pass.PurchaseDate }}">
+                <input type="hidden" name="update_person_expiration_date" value="{{ pass.ExpirationDate }}">
+                <input type="hidden" name="update_person_skier_id" value="{{ pass.Skiers_SkierID }}">
+                <td>
+                    <button type="submit">
+                        Update
+                    </button>
+                </td>
+            </form>
         </tr>
         {% endfor %}
     </tbody>

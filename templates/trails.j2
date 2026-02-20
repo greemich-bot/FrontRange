@@ -26,15 +26,26 @@
             <td>{{ trail.Status }}</td>
 
             {# DELETE form #}
-            <form id="delete_person_form">
-                <input type="hidden" name="delete_person_id" value="{{ trail.TrailID }}">
-                <input type="hidden" name="delete_person_name" value="{{ trail.TrailName }}">
+            <form id="delete_trail_form">
+                <input type="hidden" name="delete_trail_id" value="{{ trail.TrailID }}">
+                <input type="hidden" name="delete_trail_name" value="{{ trail.TrailName }}">
                 <td>
                     <button type="submit">
                         Delete
                     </button>
                 </td>
             </form>
+            <form id="update_trail_form">
+                <input type="hidden" name="update_trail_id" value="{{ trail.TrailID }}">
+                <input type="hidden" name="update_trail_name" value="{{ trail.TrailName }}"> 
+                <input type="hidden" name="update_trail_difficulty" value="{{ trail.Difficulty }}">
+                <input type="hidden" name="update_trail_length" value="{{ trail.TrailLength }}">
+                <input type="hidden" name="update_trail_status" value="{{ trail.Status }}">
+                <td>
+                    <button type="submit">
+                        Update
+                    </button>
+                </td>
         </tr>
         {% endfor %}
     </tbody>

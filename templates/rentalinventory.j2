@@ -23,15 +23,23 @@
             <td>{{ item.Type }}</td>
 
             {# DELETE form #}
-            <form id="delete_person_form">
-                <input type="hidden" name="delete_person_id" value="{{ item.RentalID }}">
-                <input type="hidden" name="delete_person_name" value="{{ item.Type }}">
+            <form id="delete_rental_form">
+                <input type="hidden" name="delete_rental_id" value="{{ item.RentalID }}">
+                <input type="hidden" name="delete_rental_name" value="{{ item.Type }}">
                 <td>
                     <button type="submit">
                         Delete
                     </button>
                 </td>
             </form>
+            <form id="update_rental_form">
+                <input type="hidden" name="update_rental_id" value="{{ item.RentalID }}">
+                <input type="hidden" name="update_rental_type" value="{{ item.Type }}"> 
+                <td>
+                    <button type="submit">
+                        Update
+                    </button>
+                </td>
         </tr>
         {% endfor %}
     </tbody>
