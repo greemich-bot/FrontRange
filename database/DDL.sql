@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `Skiers` (
   `Phone` VARCHAR(11) NULL,
   `Email` VARCHAR(255) NULL,
   `Ability` VARCHAR(45) NULL,
-  PRIMARY KEY (`SkierID`)) -- repo push test comment alyoois
+  PRIMARY KEY (`SkierID`)) -- repo push test comment alyoois 2
 ENGINE = InnoDB;
 
 
