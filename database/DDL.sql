@@ -5,7 +5,6 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 
 -- CREATE SCHEMA IF NOT EXISTS `SkiResortDB` DEFAULT CHARACTER SET utf8 ;
 -- USE `SkiResortDB` ;
-
 -- -----------------------------------------------------
 -- create Skiers Table
 -- -----------------------------------------------------
@@ -16,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `Skiers` (
   `Phone` VARCHAR(11) NULL,
   `Email` VARCHAR(255) NULL,
   `Ability` VARCHAR(45) NULL,
-  PRIMARY KEY (`SkierID`))
+  PRIMARY KEY (`SkierID`)) -- repo push test comment alyoois
 ENGINE = InnoDB;
 
 
