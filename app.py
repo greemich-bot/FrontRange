@@ -4,7 +4,7 @@
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 
-PORT = 12198
+PORT = 8083
 
 app = Flask(__name__)
 
@@ -315,6 +315,48 @@ def skierstrails():
         # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
+
+# create skier
+
+@app.route("/skiers/create", methods=["POST"])
+def create_skiers():
+    try:
+        dbConnection = db.connectDB() # this opens skiers db connection
+        cursor = dbConnection.cursor()
+
+        # Get form data. will do data cleansing try/catch blocks later since we don't have int input for the following attributes:
+        Name = request.form["create_skier_name"]
+        Address = request.form["create_skier_address"]
+        Phone = request.form["create_skier_phone"]
+        Email = request.form["create_skier_email"]
+        Ability = request.form["create_skier_ability"]
+
+        # call create skier sp method. use parameterized queries to prevent injuection attacks like drop table or db.
+        query1 = "CALL sp_CreateSkier(%s, %s, %s, %s, %s, @new_id);"
+        cursor.execute(query1, (Name, Address, Phone, Email, Ability))
+
+        # store the generated skier id for the last inserted row. this will be the pk for the new inserted row
+        new_id = cursor.fetchone()[0] # id is index 0 of the row
+        cursor.nextset() # Move the the next result. Assuming this to move to the next row?
+        dbConnection.commit() #commit transaction
+        print(f"""Create skiers. 
+        ID: {new_id} 
+        Name: {Name} 
+        Address {Address} 
+        Phone {Phone} 
+        Email {Email} 
+        Ability {Ability}
+        """)
+        # Redirect to the updated webpage by add the path /skiers
+        return redirect("/skiers")
+    except Exception as e:
+        print(f"Error executing quereis: {e}")
+        return ("An error occurred whle executing this database queries. ", 500,) # ProgError, OpsError, DBError? can be more specific
+    finally:
+        # Close the DB Conneciton, if it exists:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
 # ########################################
 # ########## LISTENER
 
