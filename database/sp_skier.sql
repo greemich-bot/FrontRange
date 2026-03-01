@@ -23,3 +23,29 @@ BEGIN
    
 END //
 DELIMITER ;   
+
+-- #############################
+-- UPDATE skiers
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateSkier;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateSkier(
+    int s_id int,
+    in s_name varchar,
+    in s_address varchar,
+    in s_phone varchar,
+    in s_email varchar,
+    in s_ability varchar
+    )
+
+BEGIN
+    UPDATE Skiers SET 
+        Name = s_name,
+        Address = n s_address,
+        Phone =  s_phone,
+        Email =  s_email,
+        Ability =  s_ability 
+    WHERE SkierID = s_id; 
+END //
+DELIMITER ;
