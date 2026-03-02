@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS `Skiers` (
   `SkierID` INT NOT NULL AUTO_INCREMENT,
   `Name` VARCHAR(45) NOT NULL,
   `Address` VARCHAR(255) NULL,
-  `Phone` VARCHAR(11) NULL,
+  `Phone` VARCHAR(20) NULL,
   `Email` VARCHAR(255) NULL,
   `Ability` VARCHAR(45) NULL,
   PRIMARY KEY (`SkierID`)) -- add test comment!!
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS `Passes` (
   CONSTRAINT `fk_Pass_Skiers`
     FOREIGN KEY (`Skiers_SkierID`)
     REFERENCES `Skiers` (`SkierID`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

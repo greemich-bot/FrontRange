@@ -67,7 +67,7 @@ def create_skiers():
         Ability = request.form["create_skier_ability"]
 
         # call create skier sp method. use parameterized queries to prevent injuection attacks like drop table or db.
-        query1 = "CALL sp_CreateSkier(%s, %s, %s, %s, %s, @new_id);"
+        query1 = "CALL sp_CreateSkier(%s, %s, %s, %s, %s, @s_new_id);"
         cursor.execute(query1, (Name, Address, Phone, Email, Ability))
 
         # store the generated skier id for the last inserted row. this will be the pk for the new inserted row

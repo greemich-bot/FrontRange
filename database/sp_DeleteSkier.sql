@@ -22,7 +22,6 @@ BEGIN
         --      intersection table to prevent a data anamoly
         -- This can also be accomplished by using an 'ON DELETE CASCADE' constraint
         --      inside the SkiersLifts table.
-        DELETE FROM SkiersLifts WHERE Skiers_SkierID = s_id;
         DELETE FROM Skiers WHERE SkierID = s_id;
 
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
