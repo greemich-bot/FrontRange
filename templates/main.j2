@@ -24,3 +24,14 @@
 
 </body>
 </html>
+
+<script>
+function toggleUpdateForm(skierID) {
+    var form = document.getElementById("update_form_" + skierID);
+    if (form.style.display === "none") {
+        form.style.display = "block";  // Show the form
+    } else {
+        form.style.display = "none";   // Hide it again if clicked twice
+    }
+}
+</script>

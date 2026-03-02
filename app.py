@@ -126,6 +126,51 @@ def create_passes():
 
     finally:
         if "dbConnection" in locals():
+# update skier
+
+@app.route("/skiers/update", methods=["POST"])
+def update_skiers():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+        cursor = dbConnection.cursor()
+
+        # Get form data
+        skier_id = request.form["update_skier_id"]
+        Name = request.form["update_skier_name"]
+        Address = request.form["update_skier_address"]
+        Phone = request.form["update_skier_phone"]
+        Email = request.form["update_skier_email"]
+        Ability = request.form["update_skier_ability"]
+
+        # Create and execute our queries
+        # Using parameterized queries (Prevents SQL injection attacks)
+        query1 = "CALL sp_UpdateSkier(%s, %s, %s, %s, %s, %s);"
+        cursor.execute(query1, (skier_id, Name, Address, Phone, Email, Ability))
+
+        dbConnection.commit()  # commit the transaction
+
+        print(f"""UPDATE skiers. 
+        ID: {skier_id} 
+        Name: {Name} 
+        Address {Address} 
+        Phone {Phone} 
+        Email {Email} 
+        Ability {Ability}
+        """)
+
+        # Redirect the user to the updated webpage
+        return redirect("/skiers")
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return (
+            "An error occurred while executing the database queries.",
+            500,
+        )
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
 # delete skier
