@@ -11,7 +11,8 @@
             {% for key in skiers[0].keys() %}
             <th>{{ key }}</th>
             {% endfor %}
-            <th></th>
+            <th>Delete Skier</th>
+            <th>Edit Skier</th>
         </tr>
     </thead>
 
@@ -33,6 +34,43 @@
                     <input type="submit" value="Delete">
                 </form>
             </td>
+            {# UPDATE form #}
+            <td>
+        <!-- 1. The Trigger Button -->
+        <button type="button" onclick="toggleUpdateForm('{{ skier.SkierID }}')">Edit</button>
+
+        <!-- 2. The Hidden Form -->
+        <form class="cuForm" id="update_form_{{ skier.SkierID }}" 
+              method="POST" action="/skiers/update" style="display:none; margin-top: 10px;">
+            
+            <input type="hidden" name="update_skier_id" value="{{ skier.SkierID }}">
+            
+            <label>Name:</label>
+            <input type="text" name="update_skier_name" value="{{ skier.Name }}" required>
+            
+            <label>Email:</label>
+            <input type="email" name="update_skier_email" value="{{ skier.Email }}" required>
+
+            <label>Address:</label>
+            <input type="text" name="update_skier_address" value="{{ skier.Address }}" required>
+
+            <label>Phone:</label>
+            <input type="text" name="update_skier_phone" value="{{ skier.Phone }}" required>
+
+            <label>Ability:</label>
+            <select name="update_skier_ability" required>
+                <option value="Beginner" {% if skier.Ability == 'Beginner' %}selected{% endif %}>Beginner</option>
+                <option value="Intermediate" {% if skier.Ability == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+                <option value="Expert" {% if skier.Ability == 'Expert' %}selected{% endif %}>Expert</option>
+            </select>
+            
+            <input type="submit" value="Save Changes">
+            <button type="button" onclick="toggleUpdateForm('{{ skier.SkierID }}')">Cancel</button>
+        </form>
+    </td>
+            
+            
+            
         </tr>
         {% endfor %}
     </tbody>
