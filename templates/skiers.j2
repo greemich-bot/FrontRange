@@ -27,24 +27,12 @@
             <td>{{ skier.Ability }}</td>
 
             {# DELETE form #}
-            <form id="delete_person_form">
-                <input type="hidden" name="delete_person_id" value="{{ skier.SkerID }}">
-                <input type="hidden" name="delete_person_name" value="{{ skier.Name }}">
-                <td>
-                    <button type="submit">
-                        Delete
-                    </button>
-                </td>
-            </form>
-            <form id="update_person_form">
-                <input type="hidden" name="update_person_id" value="{{ skier.SkerID }}">
-                <input type="hidden" name="update_person_name" value="{{ skier.Name }}">
-                <td>
-                    <button type="submit">
-                        Update
-                    </button>
-                </td>
-            </form>
+            <td>
+                <form class="cuForm" id="delete_skier_form_{{ skier.SkierID }}" method="POST" action="/skiers/delete">
+                    <input type="hidden" name="delete_skier_id" value="{{ skier.SkierID }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
