@@ -54,29 +54,41 @@
 </table>
 -- create passes -------------------------------------------------------------
 <h2>Create Passes</h2>
+
+
 <form class="cuForm" id="create_passes_form" method="POST" action="/passes/create">
 
-    <label for="create_pass_type"> Type: </label>
-    <select name="create_pass_type" id="create_pass_type" required>
-        <option value="" disabled selected>Select pass type</option>
-        <option value="Full Season">Full Season</option>
-        <option value="Day Pass">Day Pass</option>
-        <option value="3-Day Pass">3-Day Pass</option>
-    </select>
+<label>Type:</label>
+<select name="create_pass_type" required>
+    <option disabled selected>Select pass type</option>
+    <option value="Full Season">Full Season</option>
+    <option value="Day Pass">Day Pass</option>
+    <option value="3-Day Pass">3-Day Pass</option>
+</select>
 
-    <label for="create_purchase_date"> PurchaseDate: </label>
-    <input type="text" name="create_purchase_date" id="create_purchase_date" required>
+<label>Purchase Date:</label>
+<input type="datetime-local"
+       name="create_purchase_date"
+       required>
 
-    <label for="create_expiration_date"> ExpirationDate: </label>
-    <input type="text" name="create_expiration_date" id="create_expiration_date" required>
+<label>Expiration Date:</label>
+<input type="datetime-local"
+       name="create_expiration_date"
+       required>
 
-    <label for="create_skier_skierId"> Skiers_SkierID: </label>
-    <input type="text" name="create_skier_skierId" id="create_skier_skierId" required>
+<label>Skier:</label>
+<select name="create_skier_skierId" required>
+    <option disabled selected>Select Skier</option>
 
+    {% for skier in skiers %}
+    <option value="{{ skier.SkierID }}">
+        {{ skier.Name }}
+    </option>
+    {% endfor %}
+</select>
 
-    </select>
+<input type="submit">
 
-    <input type="submit">
 </form>
 
 {% endblock %}

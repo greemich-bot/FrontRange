@@ -357,6 +357,43 @@ def create_skiers():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+@app.route("/passes/create", methods=["POST"])
+def create_passes():
+    try:
+        dbConnection = db.connectDB() # this opens skiers db connection
+        cursor = dbConnection.cursor()
+
+        # Get form data. will do data cleansing try/catch blocks later since we don't have int input for the following attributes:
+        Type = request.form["create_pass_type"]
+        PurchaseDate = request.form["create_purchase_date"]
+        ExpirationDate = request.form["create_expiration_date"]
+        Skiers_SkierID = request.form["create_skier_skierId"]
+
+        # call create pass sp method. use parameterized queries to prevent injuection attacks like drop table or db.
+        query1 = "CALL sp_CreateSkier(%s, %s, %s, %s, @new_id);"
+        cursor.execute(query1, (Type, PurchaseDate, ExpirationDate, Skiers_SkierID))
+
+        # store the generated pass id for the last inserted row. this will be the pk for the new inserted row
+        new_id = cursor.fetchone()[0] # id is index 0 of the row
+        cursor.nextset() # Move the the next result. Assuming this to move to the next row?
+        dbConnection.commit() #commit transaction
+        print(f"""Create passes. 
+        ID: {new_id} 
+        Type: {Type} 
+        PurchaseDate: {PurchaseDate} 
+        ExpirationDate: {ExpirationDate} 
+        Skiers_SkierID: {Skiers_SkierID}
+        """)
+        # Redirect to the updated webpage by add the path /skiers
+        return redirect("/passes")
+    except Exception as e:
+        print(f"Error executing quereis: {e}")
+        return ("An error occurred whle executing this database queries. ", 500,) # ProgError, OpsError, DBError? can be more specific
+    finally:
+        # Close the DB Conneciton, if it exists:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
 # ########################################
 # ########## LISTENER
 

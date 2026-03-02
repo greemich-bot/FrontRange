@@ -22,30 +22,31 @@ BEGIN
    -- select @s_new_id as 'New Skier ID';
    
 END //
+DELIMITER ;  
+
+-- create pass sp
+DROP PROCEDURE IF EXISTS sp_CreatePass;
+
+DELIMITER //
+create procedure sp_CreatePass(
+    in p_type varchar(45),
+    in p_purchaseDate DATETIME,
+    in p_expirationDate DATETIME,
+    in p_skiers_SkierID INT,
+    out p_id int)
+BEGIN
+	insert INTO Passes(Type, PurchaseDate, ExpirationDate, Skiers_SkierID)
+    VALUES (p_type, p_purchaseDate, p_expirationDate, p_skiers_SkierID);
+    
+    -- store the pass id of the last inserted row:
+    select last_insert_id() into p_id;
+    -- then display id of the last inserted row
+    select last_insert_id() AS 'p_new_id';
+    
+   
+END //
 DELIMITER ;   
 
 -- #############################
 -- UPDATE skiers
 -- #############################
-DROP PROCEDURE IF EXISTS sp_UpdateSkier;
-
-DELIMITER //
-CREATE PROCEDURE sp_UpdateSkier(
-    int s_id int,
-    in s_name varchar,
-    in s_address varchar,
-    in s_phone varchar,
-    in s_email varchar,
-    in s_ability varchar
-    )
-
-BEGIN
-    UPDATE Skiers SET 
-        Name = s_name,
-        Address = n s_address,
-        Phone =  s_phone,
-        Email =  s_email,
-        Ability =  s_ability 
-    WHERE SkierID = s_id; 
-END //
-DELIMITER ;
