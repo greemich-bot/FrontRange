@@ -3,9 +3,8 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 
--- CREATE SCHEMA IF NOT EXISTS `SkiResortDB` DEFAULT CHARACTER SET utf8 ;
+-- CREATE SCHEMA IF NOT EXISTS `cs340_alyoois` DEFAULT CHARACTER SET utf8 ;
 -- USE `SkiResortDB` ;
-
 -- -----------------------------------------------------
 -- create Skiers Table
 -- -----------------------------------------------------
@@ -16,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `Skiers` (
   `Phone` VARCHAR(11) NULL,
   `Email` VARCHAR(255) NULL,
   `Ability` VARCHAR(45) NULL,
-  PRIMARY KEY (`SkierID`))
+  PRIMARY KEY (`SkierID`)) -- add test comment!!
 ENGINE = InnoDB;
 
 
