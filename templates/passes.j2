@@ -78,13 +78,17 @@
 
 <label>Skier:</label>
 <select name="create_skier_skierId" required>
-    <option disabled selected>Select Skier</option>
+
+    <option value="" disabled selected>
+        Select Skier
+    </option>
 
     {% for skier in skiers %}
-    <option value="{{ skier.SkierID }}">
-        {{ skier.Name }}
-    </option>
+        <option value="{{ skier.SkierID }}">
+            {{ skier.Name }}
+        </option>
     {% endfor %}
+
 </select>
 
 <input type="submit">

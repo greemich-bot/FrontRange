@@ -4,7 +4,7 @@
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 
-PORT = 8083
+PORT = 8084
 
 app = Flask(__name__)
 
@@ -69,7 +69,7 @@ def create_skiers():
         # call create skier sp method. use parameterized queries to prevent injuection attacks like drop table or db.
         query1 = "CALL sp_CreateSkier(%s, %s, %s, %s, %s, @s_new_id);"
         cursor.execute(query1, (Name, Address, Phone, Email, Ability))
-
+        cursor.nextset()
         # store the generated skier id for the last inserted row. this will be the pk for the new inserted row
         cursor.execute("SELECT @new_id;")
         new_id = cursor.fetchone()[0] # id is index 0 of the row
@@ -87,7 +87,7 @@ def create_skiers():
         return redirect("/skiers")
     except Exception as e:
         print(f"Error executing quereis: {e}")
-        return ("An error occurred whle executing this database queries. ", 500,) # ProgError, OpsError, DBError? can be more specific
+        return ("An error occurred while executing skiers/create this database queries. ", 500,) # ProgError, OpsError, DBError? can be more specific
     finally:
         # Close the DB Conneciton, if it exists:
         if "dbConnection" in locals() and dbConnection:
@@ -96,39 +96,36 @@ def create_skiers():
 @app.route("/passes/create", methods=["POST"])
 def create_passes():
     try:
-        dbConnection = db.connectDB() # this opens skiers db connection
+        dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        # Get form data. will do data cleansing try/catch blocks later since we don't have int input for the following attributes:
         Type = request.form["create_pass_type"]
-        PurchaseDate = request.form["create_purchase_date"]
-        ExpirationDate = request.form["create_expiration_date"]
-        Skiers_SkierID = request.form["create_skier_skierId"]
 
-        # call create pass sp method. use parameterized queries to prevent injuection attacks like drop table or db.
-        query1 = "CALL sp_CreatePass(%s, %s, %s, %s, @new_id);"
-        cursor.execute(query1, (Type, PurchaseDate, ExpirationDate, Skiers_SkierID))
+        PurchaseDate = request.form["create_purchase_date"].replace("T"," ") + ":00"
+        ExpirationDate = request.form["create_expiration_date"].replace("T"," ") + ":00"
 
-        # store the generated pass id for the last inserted row. this will be the pk for the new inserted row
+        Skiers_SkierID = int(request.form["create_skier_skierId"])
+
+        cursor.execute(
+            "CALL sp_CreatePass(%s,%s,%s,%s,@new_id);",
+            (Type, PurchaseDate, ExpirationDate, Skiers_SkierID)
+        )
+
+        cursor.nextset()
+
         cursor.execute("SELECT @new_id;")
         new_id = cursor.fetchone()[0]
-        # cursor.nextset() # Move the the next result. Assuming this to move to the next row?
-        dbConnection.commit() #commit transaction
-        print(f"""Create passes. 
-        ID: {new_id} 
-        Type: {Type} 
-        PurchaseDate: {PurchaseDate} 
-        ExpirationDate: {ExpirationDate} 
-        Skiers_SkierID: {Skiers_SkierID}
-        """)
-        # Redirect to the updated webpage by add the path /skiers
+
+        dbConnection.commit()
+
         return redirect("/passes")
+
     except Exception as e:
-        print(f"Error executing quereis: {e}")
-        return ("An error occurred whle executing this database queries. ", 500,) # ProgError, OpsError, DBError? can be more specific
+        print("REAL ERROR:", e)
+        return ("Create pass failed", 500)
+
     finally:
-        # Close the DB Conneciton, if it exists:
-        if "dbConnection" in locals() and dbConnection:
+        if "dbConnection" in locals():
             dbConnection.close()
 
 # delete skier
@@ -257,28 +254,22 @@ def skierslifts():
 @app.route("/passes", methods=["GET"])
 def passes():
     try:
-        dbConnection = db.connectDB()  # Open our database connection
+        dbConnection = db.connectDB()
 
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
-        query1 = "SELECT * FROM Passes;"
-        
-        passes = db.query(dbConnection, query1).fetchall()
+        passes_query = "SELECT * FROM Passes;"
+        passes = db.query(dbConnection, passes_query).fetchall()
 
-        # Render the passes.j2 file, and also send the renderer
-        # a couple objects that contains passes information
+        skiers_query = "SELECT SkierID, Name FROM Skiers;"
+        skiers = db.query(dbConnection, skiers_query).fetchall()
+
         return render_template(
-            "passes.j2", passes=passes      
+            "passes.j2",
+            passes=passes,
+            skiers=skiers
         )
 
-    except Exception as e:
-        print(f"Error executing queries: {e}")
-        return "An error occurred while executing the database queries.", 500
-
     finally:
-        # Close the DB connection, if it exists
-        if "dbConnection" in locals() and dbConnection:
+        if "dbConnection" in locals():
             dbConnection.close()
 
 # --------------------------------------------------------------------------------------------------

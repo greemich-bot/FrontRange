@@ -16,10 +16,6 @@ BEGIN
     select last_insert_id() into s_id;
     -- then display id of the last inserted row
     select last_insert_id() AS 's_new_id';
-    
-    -- to call the sp and show the newely created id:
-   -- call sp_CreateSkier('Joe smith', '123 st phx az', '6667778888', 'joes@email.com', 'Expert', @s_new_id)
-   -- select @s_new_id as 'New Skier ID';
    
 END //
 DELIMITER ;  
