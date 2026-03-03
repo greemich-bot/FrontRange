@@ -20,6 +20,32 @@ def home():
     except Exception as e:
         print(f"Error rendering page: {e}")
         return "An error occurred while rendering the page.", 500
+
+
+# -----------------------------------------------------------------------------------------
+# Reset Route
+# -----------------------------------------------------------------------------------------
+@app.route("/reset-db", methods=["POST"])
+def reset_database():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        # Call your reset procedure
+        cursor.execute("CALL sp_load_front_range_data();")
+        dbConnection.commit()
+        
+        print("Database reset successful!")
+        return redirect("/skiers") # Redirect back to see the fresh data
+
+    except Exception as e:
+        print(f"Error resetting database: {e}")
+        return "An error occurred during database reset.", 500
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
     
 # ---------------------------------------------------------------------------------------------------------
 # Skiers CRUD routes
@@ -93,40 +119,44 @@ def create_skiers():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-@app.route("/passes/create", methods=["POST"])
-def create_passes():
+@app.route('/skiers/update', methods=['POST'])
+def update_skier():
     try:
+        # 1. Connect to the DB and create a cursor
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        Type = request.form["create_pass_type"]
+        # 2. Capture data from form 'name' attributes
+        # Ensure these keys match the 'name' attributes in your skiers.j2 file
+        s_id = request.form['update_skier_id']
+        s_name = request.form['update_skier_name']
+        s_address = request.form['update_skier_address']
+        s_phone = request.form['update_skier_phone']
+        s_email = request.form['update_skier_email']
+        s_ability = request.form['update_skier_ability']
 
-        PurchaseDate = request.form["create_purchase_date"].replace("T"," ") + ":00"
-        ExpirationDate = request.form["create_expiration_date"].replace("T"," ") + ":00"
-
-        Skiers_SkierID = int(request.form["create_skier_skierId"])
-
-        cursor.execute(
-            "CALL sp_CreatePass(%s,%s,%s,%s,@new_id);",
-            (Type, PurchaseDate, ExpirationDate, Skiers_SkierID)
-        )
-
-        cursor.nextset()
-
-        cursor.execute("SELECT @new_id;")
-        new_id = cursor.fetchone()[0]
-
+        # 3. Call the Stored Procedure using the project's parameter syntax
+        # Order: s_id, s_name, s_address, s_phone, s_email, s_ability
+        query = "CALL sp_UpdateSkier(%s, %s, %s, %s, %s, %s);"
+        params = (s_id, s_name, s_address, s_phone, s_email, s_ability)
+        
+        cursor.execute(query, params)
         dbConnection.commit()
+        
+        print(f"UPDATE skier successful. ID: {s_id}")
 
-        return redirect("/passes")
+        # 4. Redirect back to the skiers table
+        return redirect("/skiers")
 
     except Exception as e:
-        print("REAL ERROR:", e)
-        return ("Create pass failed", 500)
+        print(f"Error updating skier: {e}")
+        return "An error occurred while updating the skier.", 500
 
     finally:
-        if "dbConnection" in locals():
+        # 5. Clean up connection
+        if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
+
 
 # delete skier
 @app.route("/skiers/delete", methods=["POST"])
@@ -267,6 +297,42 @@ def passes():
             passes=passes,
             skiers=skiers
         )
+
+    finally:
+        if "dbConnection" in locals():
+            dbConnection.close()
+
+# create pass
+@app.route("/passes/create", methods=["POST"])
+def create_passes():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        Type = request.form["create_pass_type"]
+
+        PurchaseDate = request.form["create_purchase_date"].replace("T"," ") + ":00"
+        ExpirationDate = request.form["create_expiration_date"].replace("T"," ") + ":00"
+
+        Skiers_SkierID = int(request.form["create_skier_skierId"])
+
+        cursor.execute(
+            "CALL sp_CreatePass(%s,%s,%s,%s,@new_id);",
+            (Type, PurchaseDate, ExpirationDate, Skiers_SkierID)
+        )
+
+        cursor.nextset()
+
+        cursor.execute("SELECT @new_id;")
+        new_id = cursor.fetchone()[0]
+
+        dbConnection.commit()
+
+        return redirect("/passes")
+
+    except Exception as e:
+        print("REAL ERROR:", e)
+        return ("Create pass failed", 500)
 
     finally:
         if "dbConnection" in locals():

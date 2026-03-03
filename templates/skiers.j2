@@ -98,20 +98,5 @@
 
     <input type="submit">
 </form>
-{# UPDATE form #}
-<h2>Update a Skier</h2>
-<form class="cuForm" id="update_skier_form">
-    <label for="update_skier_id">Skier to Update: </label>
-    <select name="update_skier_id" id="update_skier_id" required>
-        <option value="" disabled selected>Select a Skier</option>
-        {% for skier in Skiers %}
-        <option value="{{skier['SkierID']}}" required>
-            {{skier['SkierID']}}
-            -
-            {{skier['Name']}}
-            {{skier['Address']}}
-        </option>
-        {% endfor %}
-    </select>
-</form>
+
 {% endblock %}

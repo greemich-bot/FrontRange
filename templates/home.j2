@@ -9,5 +9,15 @@
        A skier may choose to buy passes, ride lifts, 
     ski trails, and rent equipment. An analysis of these relationships would support fund allocation for resort improvements.</p>
 </div>
+<!-- Database Reset Button -->
+<div style="margin-top: 20px; padding: 15px; border: 1px solid #ff4444; border-radius: 5px;">
+    <h3>Admin Tools</h3>
+    <form action="/reset-db" method="POST" onsubmit="return confirm('Are you sure? This will wipe all current data and reset to defaults.');">
+        <button type="submit" style="background-color: #ff4444; color: white; padding: 10px 20px; border: none; cursor: pointer;">
+            Reset Database to Sample Data
+        </button>
+    </form>
+</div>
+
 
 {% endblock %}
