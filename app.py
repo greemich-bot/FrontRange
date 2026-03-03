@@ -20,6 +20,32 @@ def home():
     except Exception as e:
         print(f"Error rendering page: {e}")
         return "An error occurred while rendering the page.", 500
+
+
+# -----------------------------------------------------------------------------------------
+# Reset Route
+# -----------------------------------------------------------------------------------------
+@app.route("/reset-db", methods=["POST"])
+def reset_database():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        # Call your reset procedure
+        cursor.execute("CALL sp_load_front_range_data();")
+        dbConnection.commit()
+        
+        print("Database reset successful!")
+        return redirect("/skiers") # Redirect back to see the fresh data
+
+    except Exception as e:
+        print(f"Error resetting database: {e}")
+        return "An error occurred during database reset.", 500
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
     
 # ---------------------------------------------------------------------------------------------------------
 # Skiers CRUD routes
