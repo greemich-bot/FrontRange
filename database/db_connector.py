@@ -3,7 +3,7 @@ import MySQLdb
 # Database credentials
 host = 'classmysql.engr.oregonstate.edu'    
 user = 'cs340_alyoois'       
-passwd = 'xyz'    
+passwd = '8857'    
 db = 'cs340_alyoois'   
 
 def connectDB(host = host, user = user, passwd = passwd, db = db):
