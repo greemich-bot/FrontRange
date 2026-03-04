@@ -16,3 +16,13 @@
        # Then provided my route and skiers.j2
 7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
+
+# Date: 2/15/2026
+3      # Prompts used to add functionality to SkiersRentals Update button
+4      # Help me add a button that updates skiers rentals by building a route.
+       # Returned a route with all of the PL embedded, and the code for another page where the information can be edited. 
+       # We will likely adjust and write an SP and integrate the update button to match the skier's page.
+7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
+
