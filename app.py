@@ -158,6 +158,40 @@ def update_skier():
             dbConnection.close()
 
 
+# delete pass
+@app.route("/passes/delete", methods=["POST"])
+def delete_passes():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+        cursor = dbConnection.cursor()
+
+        # Get form data
+        pass_id = request.form["delete_pass_id"]
+
+        # Create and execute our queries
+        # Using parameterized queries (Prevents SQL injection attacks)
+        query1 = "CALL sp_DeletePass(%s);"
+        cursor.execute(query1, (pass_id,))
+
+        dbConnection.commit()  # commit the transaction
+
+        print(f"DELETE pass. ID: {pass_id} Name: {pass_id}")
+
+        # Redirect the user to the updated webpage
+        return redirect("/passes")
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return (
+            "An error occurred while executing the database queries.",
+            500,
+        )
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
 # delete skier
 @app.route("/skiers/delete", methods=["POST"])
 def delete_skiers():
@@ -487,42 +521,6 @@ def skierstrails():
     except Exception as e:
         print(f"Error executing queries: {e}")
         return "An error occurred while executing the database queries.", 500
-
-    finally:
-        # Close the DB connection, if it exists
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
-
-
-# DELETE ROUTES
-@app.route("/passes/delete", methods=["POST"])
-def delete_passes():
-    try:
-        dbConnection = db.connectDB()  # Open our database connection
-        cursor = dbConnection.cursor()
-
-        # Get form data
-        person_id = request.form["delete_pass_id"]
-        person_name = request.form["delete_pass_name"]
-
-        # Create and execute our queries
-        # Using parameterized queries (Prevents SQL injection attacks)
-        query1 = "CALL sp_DeletePerson(%s);"
-        cursor.execute(query1, (person_id,))
-
-        dbConnection.commit()  # commit the transaction
-
-        print(f"DELETE bsg-people. ID: {person_id} Name: {person_name}")
-
-        # Redirect the user to the updated webpage
-        return redirect("/bsg-people")
-
-    except Exception as e:
-        print(f"Error executing queries: {e}")
-        return (
-            "An error occurred while executing the database queries.",
-            500,
-        )
 
     finally:
         # Close the DB connection, if it exists

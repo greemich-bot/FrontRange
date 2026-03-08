@@ -8,10 +8,11 @@
     <thead>
         {# For the table header row, we print the DB attribute names #}
         <tr>
-           {% for key in passes[0].keys() %}
+            {% for key in passes[0].keys() %}
             <th>{{ key }}</th>
             {% endfor %}
             <th>Delete Passes</th>
+           
         </tr>
     </thead>
 
@@ -25,30 +26,14 @@
             <td>{{ pass.ExpirationDate }}</td>
             <td>{{ pass.Skiers_SkierID }}</td>
 
-            {# DELETE form #}
-            <form id="delete_pass_form_{{ pass.PassID }}" method="POST" action="/passes/delete">">
-                <input type="hidden" name="delete_pass_id" value="{{ pass.PassID }}">
-                <input type="hidden" name="delete_pass_type" value="{{ pass.Type }}">
-                <input type="hidden" name="delete_pass_PurchaseDate" value="{{ pass.PurchaseDate }}">
-                <input type="hidden" name="delete_pass_phone" value="{{ pass.ExpirationDate }}">
-                <input type="hidden" name="delete_pass_email" value="{{ pass.Skiers_SkierID }}">
-                <td>
-                    <button type="submit">
-                        Delete
-                    </button>
-                </td>
-            </form>
-            <form id="update_pass_form">
-                <input type="hidden" name="update_pass_id" value="{{ pass.PassID }}">
-                <input type="hidden" name="update_pass_type" value="{{ pass.Type }}"> 
-                <input type="hidden" name="update_pass_purchase_date" value="{{ pass.PurchaseDate }}">
-                <input type="hidden" name="update_pass_expiration_date" value="{{ pass.ExpirationDate }}">
-                <input type="hidden" name="update_pass_skier_id" value="{{ pass.Skiers_SkierID }}">
-                <td>
-                    <button type="submit">
-                        Update
-                    </button>
-                </td>
+             {# DELETE form #}
+            <td>
+                <form class="cuForm" id="delete_pass_form_{{ pass.PassID }}" method="POST" action="/passes/delete">
+                    <input type="hidden" name="delete_pass_id" value="{{ pass.PassID }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+
             </form>
         </tr>
         {% endfor %}
