@@ -1,3 +1,42 @@
+//////////////////////////// delete skier /////////////////////////////////
+{% extends "main.j2" %}
+{% block content %}
+
+<h1>Skiers</h1>
+
+{# READ table #}
+<table>
+    <thead>
+        {# For the table header row, we print the DB attribute names #}
+        <tr>
+            {% for key in skiers[0].keys() %}
+            <th>{{ key }}</th>
+            {% endfor %}
+            <th>Delete Skier</th>
+            <th>Edit Skier</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {# For each row, print the id, fname, lname, homeworld and age #}
+        {% for skier in skiers %}
+        <tr>
+            <td>{{ skier.SkierID }}</td>
+            <td>{{ skier.Name}}</td>
+            <td>{{ skier.Address }}</td>
+            <td>{{ skier.Phone }}</td>
+            <td>{{ skier.Email }}</td>
+            <td>{{ skier.Ability }}</td>
+
+            {# DELETE form #}
+            <td>
+                <form class="cuForm" id="delete_skier_form_{{ skier.SkierID }}" method="POST" action="/skiers/delete">
+                    <input type="hidden" name="delete_skier_id" value="{{ skier.SkierID }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+
+/////////////////////////////delete pass////////////////////////////////////
 {% extends "main.j2" %}
 {% block content %}
 
@@ -8,10 +47,11 @@
     <thead>
         {# For the table header row, we print the DB attribute names #}
         <tr>
-           {% for key in passes[0].keys() %}
+            {% for key in passes[0].keys() %}
             <th>{{ key }}</th>
             {% endfor %}
             <th>Delete Passes</th>
+           
         </tr>
     </thead>
 
@@ -54,47 +94,3 @@
         {% endfor %}
     </tbody>
 </table>
--- create passes -------------------------------------------------------------
-<h2>Create Passes</h2>
-
-
-<form class="cuForm" id="create_passes_form" method="POST" action="/passes/create">
-
-<label>Type:</label>
-<select name="create_pass_type" required>
-    <option disabled selected>Select pass type</option>
-    <option value="Full Season">Full Season</option>
-    <option value="Day Pass">Day Pass</option>
-    <option value="3-Day Pass">3-Day Pass</option>
-</select>
-
-<label>Purchase Date:</label>
-<input type="datetime-local"
-       name="create_purchase_date"
-       required>
-
-<label>Expiration Date:</label>
-<input type="datetime-local"
-       name="create_expiration_date"
-       required>
-
-<label>Skier:</label>
-<select name="create_skier_skierId" required>
-
-    <option value="" disabled selected>
-        Select Skier
-    </option>
-
-    {% for skier in skiers %}
-        <option value="{{ skier.SkierID }}">
-            {{ skier.Name }}
-        </option>
-    {% endfor %}
-
-</select>
-
-<input type="submit">
-
-</form>
-
-{% endblock %}

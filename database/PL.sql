@@ -142,8 +142,9 @@ BEGIN
         --      intersection table to prevent a data anamoly
         -- This can also be accomplished by using an 'ON DELETE CASCADE' constraint
         --      inside the SkiersLifts table.
-        DELETE FROM Passes WHERE PassID = p_id;
         DELETE FROM Skiers WHERE Skiers_SkierID = p_id;
+        DELETE FROM Passes WHERE PassID = p_id;
+        
 
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
         IF ROW_COUNT() = 0 THEN
