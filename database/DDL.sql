@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `Skiers` (
   `Phone` VARCHAR(20) NULL,
   `Email` VARCHAR(255) NULL,
   `Ability` VARCHAR(45) NULL,
-  PRIMARY KEY (`SkierID`)) -- add test comment!!
+  PRIMARY KEY (`SkierID`)) 
 ENGINE = InnoDB;
 
 INSERT INTO `Skiers` (`Name`, `Address`, `Phone`, `Email`, `Ability`) VALUES

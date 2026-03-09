@@ -157,3 +157,56 @@ BEGIN
 
 END //
 DELIMITER ;
+
+-- #############################
+-- DELETE Lifts
+-- #############################
+DROP PROCEDURE IF EXISTS sp_DeleteLifts;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteLifts(IN l_id INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Deleting corresponding rows from both Lifts table
+        DELETE FROM Lifts WHERE LiftID = l_id;
+        
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in Lifts for id: ', l_id);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
+
+-- #############################
+-- UPDATE Lifts
+-- #############################
+DROP PROCEDURE IF EXISTS sp_UpdateSkier;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateLifts(
+    IN l_id INT, 
+    IN l_status INT
+)
+BEGIN
+   
+    UPDATE Lifts 
+    SET Status = l_status
+    WHERE LiftID = l_id; 
+END //
+DELIMITER ;

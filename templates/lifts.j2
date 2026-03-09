@@ -29,13 +29,11 @@
             <td>{{ lift.Altitude }}</td>
 
             {# DELETE form #}
-            <form id="delete_lift_form">
+            <td>
+            <form class="cuForm" id="delete_lift_form_{{ lift.LiftID }}" method="POST" action="/lifts/delete">
                 <input type="hidden" name="delete_lift_id" value="{{ lift.LiftID }}">
-                <input type="hidden" name="delete_lift_name" value="{{ lift.LiftName }}">
-                <td>
-                    <button type="submit">
-                        Delete
-                    </button>
+                    <input type="submit" value="Delete">
+                </form>
                 </td>
             </form>
         </tr>

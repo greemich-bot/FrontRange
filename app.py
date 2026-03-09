@@ -228,12 +228,81 @@ def delete_skiers():
             dbConnection.close()
 
 
+# delete Lifts
+@app.route("/lifts/delete", methods=["POST"])
+def delete_lifts():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+        cursor = dbConnection.cursor()
+
+        # Get form data
+        lift_id = request.form["delete_lift_id"]
+        
+
+        # Create and execute our queries
+        # Using parameterized queries (Prevents SQL injection attacks)
+        query1 = "CALL sp_DeleteLifts(%s);"
+        cursor.execute(query1, (lift_id,))
+
+        dbConnection.commit()  # commit the transaction
+
+        print(f"DELETE lifts. ID: {lift_id}")
+
+        # Redirect the user to the updated webpage
+        return redirect("/lifts")
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return (
+            "An error occurred while executing the database queries.",
+            500,
+        )
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+# Lifts update
+
+@app.route('/lifts/update', methods=['POST'])
+def update_lifts():
+    try:
+        # 1. Connect to the DB and create a cursor
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        # 2. Capture data from form 'name' attributes
+        # Ensure these keys match the 'name' attributes in your skiers.j2 file
+        l_id = request.form['update_lift_id']
+        l_status = request.form['update_lift_status']
+
+        # 3. Call the Stored Procedure using the project's parameter syntax
+        # Order: s_id, s_name, s_address, s_phone, s_email, s_ability
+        query = "CALL sp_UpdateLifts(%s, %s);"
+        params = (l_id, l_status)
+        
+        cursor.execute(query, params)
+        dbConnection.commit()
+        
+        print(f"UPDATE lifts successful. ID: {l_id}")
+
+        # 4. Redirect back to the skiers table
+        return redirect("/lifts")
+
+    except Exception as e:
+        print(f"Error updating skier: {e}")
+        return "An error occurred while updating the lifts.", 500
+
+    finally:
+        # 5. Clean up connection
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
 # -------------------------------------------------------------------------------------------------
 # Lifts RU
 # only need read and update
 # -------------------------------------------------------------------------------------------------
-
-
 
 @app.route("/lifts", methods=["GET"])
 def lifts():
@@ -261,8 +330,6 @@ def lifts():
         # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
-
-
 
 # --------------------------------------------------------------------------------------------------
 # SkiersLifts CRD
