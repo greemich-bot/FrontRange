@@ -1,5 +1,3 @@
-
-
 DROP PROCEDURE IF EXISTS sp_load_front_range_data;
 DELIMITER //
 CREATE PROCEDURE sp_load_front_range_data()
@@ -10,7 +8,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 
 
 -- CREATE SCHEMA IF NOT EXISTS `cs340_alyoois` DEFAULT CHARACTER SET utf8 ;
--- USE `SkiResortDB` ;
+-- USE `cs340_alyoois` ;
 -- -----------------------------------------------------
 -- create Skiers Table
 -- -----------------------------------------------------
@@ -28,7 +26,12 @@ ENGINE = InnoDB;
 INSERT INTO `Skiers` (`Name`, `Address`, `Phone`, `Email`, `Ability`) VALUES
 ('Alice Alpine', '123 Powder Lane', '5550101', 'alice@example.com', 'Expert'),
 ('Bob Backcountry', '456 Mogul Way', '5550202', 'bob@example.com', 'Intermediate'),
-('Charlie Carver', '789 Shred St', '5550303', 'charlie@example.com', 'Beginner');
+('Charlie Carver', '789 Shred St', '5550303', 'charlie@example.com', 'Beginner'),
+('Diana Downhill', '321 Summit Rd', '5550404', 'diana@example.com', 'Advanced'),
+('Ethan Edge', '654 Glacier Ave', '5550505', 'ethan@example.com', 'Intermediate'),
+('Fiona Freestyle', '987 Aspen Dr', '5550606', 'fiona@example.com', 'Expert'),
+('George Glide', '147 Snowcap Blvd', '5550707', 'george@example.com', 'Beginner'),
+('Hannah Heli', '258 Powder Peak Ln', '5550808', 'hannah@example.com', 'Advanced');
 
 
 -- -----------------------------------------------------
