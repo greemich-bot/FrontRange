@@ -41,32 +41,48 @@
 
         <!-- 2. The Hidden Form -->
         <form class="cuForm" id="update_form_{{ skier.SkierID }}" 
-              method="POST" action="/skiers/update" style="display:none; margin-top: 10px;">
-            
-            <input type="hidden" name="update_skier_id" value="{{ skier.SkierID }}">
-            
-            <label>Name:</label>
-            <input type="text" name="update_skier_name" value="{{ skier.Name }}" required>
-            
-            <label>Email:</label>
-            <input type="email" name="update_skier_email" value="{{ skier.Email }}" required>
+      method="POST" action="/skiers/update" 
+      style="display:none; margin-top: 10px; border: 1px solid #ccc; padding: 15px; width: 300px;">
+    
+    <input type="hidden" name="update_skier_id" value="{{ skier.SkierID }}">
+    
+    <div style="margin-bottom: 10px;">
+        <label style="display: block; font-weight: bold;">Name:</label>
+        <input type="text" name="update_skier_name" value="{{ skier.Name }}" required style="width: 100%;">
+    </div>
 
-            <label>Address:</label>
-            <input type="text" name="update_skier_address" value="{{ skier.Address }}" required>
+    <div style="margin-bottom: 10px;">
+        <label style="display: block; font-weight: bold;">Email:</label>
+        <input type="email" name="update_skier_email" value="{{ skier.Email }}" required style="width: 100%;">
+    </div>
 
-            <label>Phone:</label>
-            <input type="text" name="update_skier_phone" value="{{ skier.Phone }}" required>
+    <div style="margin-bottom: 10px;">
+        <label style="display: block; font-weight: bold;">Address:</label>
+        <input type="text" name="update_skier_address" value="{{ skier.Address }}" required style="width: 100%;">
+    </div>
 
-            <label>Ability:</label>
-            <select name="update_skier_ability" required>
-                <option value="Beginner" {% if skier.Ability == 'Beginner' %}selected{% endif %}>Beginner</option>
-                <option value="Intermediate" {% if skier.Ability == 'Intermediate' %}selected{% endif %}>Intermediate</option>
-                <option value="Expert" {% if skier.Ability == 'Expert' %}selected{% endif %}>Expert</option>
-            </select>
-            
-            <input type="submit" value="Save Changes">
-            <button type="button" onclick="toggleUpdateForm('{{ skier.SkierID }}')">Cancel</button>
-        </form>
+    <div style="margin-bottom: 10px;">
+        <label style="display: block; font-weight: bold;">Phone:</label>
+        <input type="text" name="update_skier_phone" value="{{ skier.Phone }}" required style="width: 100%;">
+    </div>
+
+    <div style="margin-bottom: 10px;">
+        <label style="display: block; font-weight: bold;">Ability:</label>
+        <select name="update_skier_ability" required style="width: 100%;">
+            <option value="Beginner" {% if skier.Ability == 'Beginner' %}selected{% endif %}>Beginner</option>
+            <option value="Intermediate" {% if skier.Ability == 'Intermediate' %}selected{% endif %}>Intermediate</option>
+            <option value="Expert" {% if skier.Ability == 'Expert' %}selected{% endif %}>Expert</option>
+        </select>
+    </div>
+    
+    <div style="margin-top: 15px; display: flex; gap: 10px;">
+        <input type="submit" value="Save Changes">
+        <button type="button" onclick="toggleUpdateForm('{{ skier.SkierID }}')">Cancel</button>
+    </div>
+</form>
+
+</form>
+
     </td>
             
             

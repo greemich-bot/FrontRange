@@ -10,12 +10,17 @@
     adapted to fit our needs
 
 # Citation for use of AI Tools:
-2      # Date: 3/01/2026
+
+# Date: 3/01/2026
 3      # Prompts used to create a button that opens a form to edit skiers
 4      # Help me add a button that shows a form to edit a skier row.
        # Then provided my route and skiers.j2
+       # Date 3/9/2026
+       # Provided the form to gemini and asked me to declutter. Then asked it to isolate each piece of the form.
 7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
+
+#
 
 # Date: 2/15/2026
 3      # Prompts used to add functionality to SkiersRentals Update button
