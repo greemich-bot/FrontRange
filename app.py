@@ -631,6 +631,40 @@ def trails():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+@app.route('/trails/update', methods=['POST'])
+def update_trails():
+    try:
+        # 1. Connect to the DB and create a cursor
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        # 2. Capture data from form 'name' attributes
+        # Ensure these keys match the 'name' attributes in your skiers.j2 file
+        t_id = request.form['update_trail_id']
+        t_status = request.form['update_trail_status']
+
+        # 3. Call the Stored Procedure using the project's parameter syntax
+        # Order: s_id, s_name, s_address, s_phone, s_email, s_ability
+        query = "CALL sp_UpdateTrails(%s, %s);"
+        params = (t_id, t_status)
+        
+        cursor.execute(query, params)
+        dbConnection.commit()
+        
+        print(f"UPDATE trails successful. ID: {t_id}")
+
+        # 4. Redirect back to the skiers table
+        return redirect("/trails")
+
+    except Exception as e:
+        print(f"Error updating trails: {e}")
+        return "An error occurred while updating the trails.", 500
+
+    finally:
+        # 5. Clean up connection
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
 # --------------------------------------------------------------------------------------------------
 # Skierstrails CRD
 # only need read, update, and delete

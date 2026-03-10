@@ -201,7 +201,7 @@ DROP PROCEDURE IF EXISTS sp_UpdateLifts;
 DELIMITER //
 CREATE PROCEDURE sp_UpdateLifts(
     IN l_id INT, 
-    IN l_status VARCHAR(45)
+    IN l_status INT
 )
 BEGIN
    
@@ -266,5 +266,23 @@ BEGIN
 
     COMMIT;
 
+END //
+DELIMITER ;
+
+# ------------------------------------------------------------------
+# update trails
+# ------------------------------------------------------------------
+DROP PROCEDURE IF EXISTS sp_UpdateTrails;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateTrails(
+    IN t_id INT, 
+    IN t_status INT
+)
+BEGIN
+   
+    UPDATE Trails 
+    SET Status = t_status
+    WHERE TrailID = t_id; 
 END //
 DELIMITER ;

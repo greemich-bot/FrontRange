@@ -23,21 +23,29 @@
             <td>{{ trail.TrailName}}</td>
             <td>{{ trail.Difficulty }}</td>
             <td>{{ trail.TrailLength }}</td>
-            <td>{{ trail.Status }}</td>
-
-            
-            
-            <form id="update_trail_form">
-                <input type="hidden" name="update_trail_id" value="{{ trail.TrailID }}">
-                <input type="hidden" name="update_trail_name" value="{{ trail.TrailName }}"> 
-                <input type="hidden" name="update_trail_difficulty" value="{{ trail.Difficulty }}">
-                <input type="hidden" name="update_trail_length" value="{{ trail.TrailLength }}">
-                <input type="hidden" name="update_trail_status" value="{{ trail.Status }}">
-                <td>
-                    <button type="submit">
-                        Update
-                    </button>
-                </td>
+            <td>
+    {% if trail.Status == 1 %}
+        <span style="color: #2e7d32; font-weight: bold;">Open</span>
+    {% else %}
+        <span style="color: #c62828; font-weight: bold;">Closed</span>
+    {% endif %}
+            <td>
+    <form method="POST" action="/trails/update">
+        <input type="hidden" name="update_trail_id" value="{{ trail.TrailID }}">
+        
+        {% if trail.Status == 1 %}
+            <input type="hidden" name="update_trail_status" value="0">
+            <button type="submit" style="background-color: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                Close Trail
+            </button>
+        {% else %}
+            <input type="hidden" name="update_trail_status" value="1">
+            <button type="submit" style="background-color: #5cb85c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                Open Trail
+            </button>
+        {% endif %}
+    </form>
+</td>
             </form>
         </tr>
         {% endfor %}

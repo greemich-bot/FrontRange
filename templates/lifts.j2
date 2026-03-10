@@ -25,7 +25,11 @@
             <td>{{ lift.LiftName }}</td>
             <td>{{ lift.TravelTime}}</td>
             <td>{{ lift.ChairCapacity }}</td>
-            <td>{{ lift.Status }}</td>
+            <td>{% if lift.Status == 1 %}
+        <span style="color: #28a745; font-weight: bold;">Open</span>
+    {% else %}
+        <span style="color: #d9534f; font-weight: bold;">Closed</span>
+    {% endif %}</td>
             <td>{{ lift.Altitude }}</td>
             
 
@@ -39,26 +43,27 @@
 
 
             {# UPDATE form #}
-            <td>
-        <!-- 1. The Trigger Button -->
-        <button type="button" onclick="toggleUpdateForm('{{ lift.LiftID }}')">Edit</button>
+         <td>
+    <form method="POST" action="/lifts/update">
+        <input type="hidden" name="update_lift_id" value="{{ lift.LiftID }}">
+        
+        {# If status is 1 (Open), send 0 (Close) #}
+        {% if lift.Status == 1 %}
+            <input type="hidden" name="update_lift_status" value="0">
+            <button type="submit" style="background-color: #d9534f; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                Close Lift
+            </button>
+        {# If status is 0 (Closed), send 1 (Open) #}
+        {% else %}
+            <input type="hidden" name="update_lift_status" value="1">
+            <button type="submit" style="background-color: #5cb85c; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                Open Lift
+            </button>
+        {% endif %}
+    </form>
+</td>
 
-        <!-- 2. The Hidden Form -->
-        <form class="cuForm" id="update_form_{{ lift.LiftID }}" 
-              method="POST" action="/lifts/update" style="display:none; margin-top: 10px;">
-            
-            <input type="hidden" name="update_lift_id" value="{{ lift.LiftID }}">
-            
-            <label>Status:</label>
-            <select name="update_lift_status" required>
-                <option value="open" {% if lift.Status == 'open' %}selected{% endif %}>Open</option>
-                <option value="close" {% if lift.Status == 'close' %}selected{% endif %}>Close</option>
-            </select>
-            
-             <input type="submit" value="Save Changes">
-            <button type="button" onclick="toggleUpdateForm('{{ lift.LiftID }}')">Cancel</button>
-        </form>
-        </td>
+
 
         </tr>
         {% endfor %}
@@ -67,3 +72,13 @@
 
 
 {% endblock %}
+<script>
+function toggleUpdateForm(liftID) {
+    var form = document.getElementById('update_form_' + liftID);
+    if (form.style.display === "none") {
+        form.style.display = "block";
+    } else {
+        form.style.display = "none";
+    }
+}
+</script>

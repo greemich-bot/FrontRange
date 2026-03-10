@@ -25,4 +25,13 @@ Links to an external site.
 7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 
+# Date: 3/9/2026
+3      # Prompts used to add logic for to Lifts Update button
+4      # provided sp and route, asked gemini to create a toggle switch. 
+       # It produced a checkbox system that wasnt very user friendly, so I prompted it to make a toggle that changes color when selected.
+       # Logic was copied and then adapted for changing the color of the actual status. Also applied to trials. 
+
+7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
 
