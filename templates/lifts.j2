@@ -11,8 +11,8 @@
             {% for key in lifts[0].keys() %}
             <th>{{ key }}</th>
             {% endfor %}
-            <th></th>
-            <th></th>
+            <th>Delete Lift</th>
+            <th>Edit Lift</th>
         </tr>
     </thead>
 
@@ -27,6 +27,7 @@
             <td>{{ lift.ChairCapacity }}</td>
             <td>{{ lift.Status }}</td>
             <td>{{ lift.Altitude }}</td>
+            
 
             {# DELETE form #}
             <td>
@@ -35,7 +36,30 @@
                     <input type="submit" value="Delete">
                 </form>
                 </td>
-            </form>
+
+
+            {# UPDATE form #}
+            <td>
+        <!-- 1. The Trigger Button -->
+        <button type="button" onclick="toggleUpdateForm('{{ lift.LiftID }}')">Edit</button>
+
+        <!-- 2. The Hidden Form -->
+        <form class="cuForm" id="update_form_{{ lift.LiftID }}" 
+              method="POST" action="/lifts/update" style="display:none; margin-top: 10px;">
+            
+            <input type="hidden" name="update_lift_id" value="{{ lift.LiftID }}">
+            
+            <label>Status:</label>
+            <select name="update_lift_status" required>
+                <option value="open" {% if lift.Status == 'open' %}selected{% endif %}>Open</option>
+                <option value="close" {% if lift.Status == 'close' %}selected{% endif %}>Close</option>
+            </select>
+            
+             <input type="submit" value="Save Changes">
+            <button type="button" onclick="toggleUpdateForm('{{ lift.LiftID }}')">Cancel</button>
+        </form>
+        </td>
+
         </tr>
         {% endfor %}
     </tbody>
