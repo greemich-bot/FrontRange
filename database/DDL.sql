@@ -69,12 +69,12 @@ CREATE TABLE IF NOT EXISTS `SkiersLifts` (
     FOREIGN KEY (`Lifts_LiftID`)
     REFERENCES `Lifts` (`LiftID`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_SkiersLifts_Skiers`
     FOREIGN KEY (`Skiers_SkierID`)
     REFERENCES `Skiers` (`SkierID`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 INSERT INTO `SkiersLifts` (`Lifts_LiftID`, `Skiers_SkierID`) VALUES
@@ -125,12 +125,12 @@ CREATE TABLE IF NOT EXISTS `SkiersTrails` (
     FOREIGN KEY (`Skiers_SkierID`)
     REFERENCES `Skiers` (`SkierID`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_SkiersTrails_Trails`
     FOREIGN KEY (`Trails_TrailID`)
     REFERENCES `Trails` (`TrailID`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 INSERT INTO `SkiersTrails` (`Skiers_SkierID`, `Trails_TrailID`) VALUES
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `Passes` (
     FOREIGN KEY (`Skiers_SkierID`)
     REFERENCES `Skiers` (`SkierID`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 -- Insert Passes (linking to Skiers)
@@ -200,12 +200,12 @@ CREATE TABLE IF NOT EXISTS `SkiersRentals` (
     FOREIGN KEY (`Skiers_SkierID`)
     REFERENCES `Skiers` (`SkierID`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION,
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_SkiersRentals_RentalInventory`
     FOREIGN KEY (`RentalInventory_RentalID`)
     REFERENCES `RentalInventory` (`RentalID`)
     ON DELETE CASCADE
-    ON UPDATE NO ACTION)
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 -- Intersection Table: Skier Rentals

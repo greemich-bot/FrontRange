@@ -148,7 +148,7 @@ BEGIN
 
         -- ROW_COUNT() returns the number of rows affected by the preceding statement.
         IF ROW_COUNT() = 0 THEN
-            set error_message = CONCAT('No matching record found in Skiers for id: ', p_id);
+            set error_message = CONCAT('No matching record found in Passes for id: ', p_id);
             -- Trigger custom error, invoke EXIT HANDLER
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
         END IF;
@@ -208,5 +208,30 @@ BEGIN
     UPDATE Lifts 
     SET Status = l_status
     WHERE LiftID = l_id; 
+END //
+DELIMITER ;
+
+
+
+# ------------------------------------------------------------------
+# Rental Inventory Page PL/SQL
+# ------------------------------------------------------------------
+-- create rental inventory sp
+DROP PROCEDURE IF EXISTS sp_CreateRentalInventory;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateRentalInventory(
+    IN p_type VARCHAR(45),
+    OUT p_id INT
+)
+BEGIN
+    INSERT INTO RentalInventory(Type)
+    VALUES (p_type);
+
+    -- This stores the value in your OUT parameter (Good!)
+    SELECT LAST_INSERT_ID() INTO p_id;
+    
+    -- REMOVED: SELECT LAST_INSERT_ID() AS 'p_new_id'; 
+    -- (This was causing the sync error in Python)
 END //
 DELIMITER ;
