@@ -196,12 +196,12 @@ DELIMITER ;
 -- #############################
 -- UPDATE Lifts
 -- #############################
-DROP PROCEDURE IF EXISTS sp_UpdateSkier;
+DROP PROCEDURE IF EXISTS sp_UpdateLifts;
 
 DELIMITER //
 CREATE PROCEDURE sp_UpdateLifts(
     IN l_id INT, 
-    IN l_status INT
+    IN l_status VARCHAR(45)
 )
 BEGIN
    

@@ -44,16 +44,16 @@ CREATE TABLE IF NOT EXISTS `Lifts` (
   `LiftName` VARCHAR(45) NOT NULL,
   `TravelTime` INT NOT NULL,
   `ChairCapacity` INT NOT NULL,
-  `Status` TINYINT NOT NULL,
+  `Status` INT NOT NULL NOT NULL,
   `Altitude` INT NOT NULL,
   PRIMARY KEY (`LiftID`))
 ENGINE = InnoDB;
 -- Insert Lifts
 INSERT INTO `Lifts` (`LiftNum`, `LiftName`, `TravelTime`, `ChairCapacity`, `Status`, `Altitude`) VALUES
 (1, 'Chair 1', 8, 4, 1, 8500),
-(2, 'Chair 2', 12, 4, 1, 9200),
-(3, 'Chair 3', 5, 2, 1, 8900),
-(4 , 'Gondola', 15, 8, 1, 9500);
+(2, 'Chair 2', 12, 4,1, 9200),
+(3, 'Chair 3', 5, 2,0, 8900),
+(4 , 'Gondola', 15, 8,0, 9500);
 
 
 -- -----------------------------------------------------
