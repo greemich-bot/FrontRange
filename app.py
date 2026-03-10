@@ -1,6 +1,8 @@
 # ########################################
 # ########## SETUP
 
+from tokenize import Name
+
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 
@@ -468,6 +470,46 @@ def rentalinventory():
     finally:
         # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+# create rental inventory item
+@app.route("/rentalinventory/create", methods=["POST"])
+def create_rentalinventory():
+    dbConnection = None
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        Type = request.form["create_rental_type"]
+
+        # 1. Execute the procedure
+        cursor.execute("CALL sp_CreateRentalInventory(%s, @new_id);", (Type,))
+        
+        # 2. Skip the SP's internal result set (the SELECT ... AS p_new_id)
+        while cursor.nextset():
+            try:
+                cursor.fetchone()  # Attempt to fetch from the current result set
+            except:
+                pass  # If there's an error, it likely means there are no more result sets to process
+
+        # 3. Fetch the OUT parameter
+        cursor.execute("SELECT @new_id;")
+        row = cursor.fetchone()
+        new_id = row[0] if row else None
+
+        dbConnection.commit()
+        
+        print(f"Created ID: {new_id}")
+        return redirect("/rentalinventory")
+
+    except Exception as e:
+        if dbConnection:
+            dbConnection.rollback() # Important for data integrity
+        print(f"Error: {e}")
+        return "An error occurred during creation.", 500
+    finally:
+        if dbConnection:
+            cursor.close() # Clean up the cursor too
             dbConnection.close()
 
 

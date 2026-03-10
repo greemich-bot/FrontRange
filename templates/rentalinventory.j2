@@ -32,18 +32,18 @@
                     </button>
                 </td>
             </form>
-            <form id="update_rental_form">
-                <input type="hidden" name="update_rental_id" value="{{ item.RentalID }}">
-                <input type="hidden" name="update_rental_type" value="{{ item.Type }}"> 
-                <td>
-                    <button type="submit">
-                        Update
-                    </button>
-                </td>
+            
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+<h2>Add New Rental Item</h2>
+<form id="create_rental_form" method="POST" action="/rentalinventory/create">
+    <label for="rental_type">Type:</label>
+    <input type="text" id="rental_type" name="create_rental_type" required>
+    <button type="submit">Add</button>
+</form>
 
 
 {% endblock %}
