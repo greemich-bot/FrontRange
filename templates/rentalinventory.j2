@@ -23,7 +23,7 @@
             <td>{{ item.Type }}</td>
 
             {# DELETE form #}
-            <form id="delete_rental_form">
+            <form id="delete_rental_form" method="POST" action="/rentalinventory/delete">
                 <input type="hidden" name="delete_rental_id" value="{{ item.RentalID }}">
                 <input type="hidden" name="delete_rental_name" value="{{ item.Type }}">
                 <td>

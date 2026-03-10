@@ -38,7 +38,7 @@ def reset_database():
         dbConnection.commit()
         
         print("Database reset successful!")
-        return redirect("/skiers") # Redirect back to see the fresh data
+        return redirect("/") # Redirect back to see the fresh data
 
     except Exception as e:
         print(f"Error resetting database: {e}")
@@ -510,6 +510,40 @@ def create_rentalinventory():
     finally:
         if dbConnection:
             cursor.close() # Clean up the cursor too
+            dbConnection.close()
+
+@app.route("/rentalinventory/delete", methods=["POST"])
+def delete_rentalinventory():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+        cursor = dbConnection.cursor()
+
+        # Get form data
+        rental_id = request.form["delete_rental_id"]
+        
+
+        # Create and execute our queries
+        # Using parameterized queries (Prevents SQL injection attacks)
+        query1 = "CALL sp_DeleteRentalInventory(%s);"
+        cursor.execute(query1, (rental_id,))
+
+        dbConnection.commit()  # commit the transaction
+
+        print(f"DELETE rental inventory item. ID: {rental_id}")
+
+        # Redirect the user to the updated webpage
+        return redirect("/rentalinventory")
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return (
+            "An error occurred while executing the database queries.",
+            500,
+        )
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
 

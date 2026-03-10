@@ -235,3 +235,36 @@ BEGIN
     -- (This was causing the sync error in Python)
 END //
 DELIMITER ;
+
+-- delete rental inventory sp
+DROP PROCEDURE IF EXISTS sp_DeleteRentalInventory;  
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteRentalInventory(IN r_id INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Deleting corresponding rows from both RentalInventory table
+        DELETE FROM RentalInventory WHERE RentalID = r_id;
+        
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in RentalInventory for id: ', r_id);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
