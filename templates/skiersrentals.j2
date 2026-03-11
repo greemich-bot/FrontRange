@@ -27,14 +27,9 @@
                     </a>
 
                     <!-- Delete Form -->
-                    <form id="delete_person_form">
-                <input type="hidden" name="delete_person_id" value="{{ skier.SkiersRentalsID }}">
-                <input type="hidden" name="delete_person_name" value="{{ skier.SkierName }}">
-                <td>
-                    <button type="submit">
-                        Delete
-                    </button>
-                </td>
+                    <form method="POST" action="/skiersrentals/delete">
+                    <input type="hidden" name="delete_skiersrentals_id" value="{{ skier.SkiersRentalsID }}">
+                    <button type="submit">Delete</button>
             </form>
                 </div>
             </td>

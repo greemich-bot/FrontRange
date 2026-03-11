@@ -449,7 +449,25 @@ def delete_skierslifts():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+################ delete skiersrentals ###########
+@app.route("/skiersrentals/delete", methods=["POST"])
+def delete_skiersrentals():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
 
+        sr_id = request.form["delete_skiersrentals_id"]
+
+        cursor.execute("CALL sp_DeleteSkiersRentals(%s);", (sr_id,))
+        dbConnection.commit()
+
+        print(f"DELETE skiersrentals. ID: {sr_id}")
+
+        return redirect("/skiersrentals")
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
 
 
 # --------------------------------------------------------------------------------------------------
