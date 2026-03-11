@@ -188,7 +188,8 @@ INSERT INTO `RentalInventory` (`Type`) VALUES
 
 
 -- -----------------------------------------------------
--- create SkiersRentals Table to serve as an intersection table for the many-to-many relationship between Skiers and Rental Inventory
+-- create SkiersRentals Table to serve as an intersection table for the many-to-many relationship 
+-- between Skiers and Rental Inventory
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `SkiersRentals`;
 CREATE TABLE IF NOT EXISTS `SkiersRentals` (

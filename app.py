@@ -6,7 +6,7 @@ from tokenize import Name
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 
-PORT = 8083
+PORT = 10006
 
 app = Flask(__name__)
 
@@ -35,10 +35,12 @@ def reset_database():
 
         # Call your reset procedure
         cursor.execute("CALL sp_load_front_range_data();")
+        while cursor.nextset():
+            pass
         dbConnection.commit()
         
         print("Database reset successful!")
-        return redirect("/") # Redirect back to see the fresh data
+        return redirect("/skiers") # Redirect back to see the fresh data
 
     except Exception as e:
         print(f"Error resetting database: {e}")
