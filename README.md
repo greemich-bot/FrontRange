@@ -39,4 +39,11 @@ Links to an external site.
 7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 
+# Date: 3/10/2026
+3      # Prompts used to add logic for to passes create button
+4      # provided gemini my current stored procedure and asked it to calculate my expiration date based on pass type. First iteration gave me an trigger and an 
+       #error, I then provided my route and it suggested updating my stored procedure instead.
+       # 
+7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
 

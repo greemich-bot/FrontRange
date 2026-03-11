@@ -8,10 +8,12 @@
     <thead>
         {# For the table header row, we print the DB attribute names #}
         <tr>
-            {% for key in passes[0].keys() %}
-            <th>{{ key }}</th>
-            {% endfor %}
-            <th>Delete Passes</th>
+            <th>ID</th>
+            <th>Type</th>
+            <th>Purchase Date</th>
+            <th>Expiration Date</th>
+            <th>Skier ID</th>
+            <th>Actions</th>
            
         </tr>
     </thead>
@@ -24,7 +26,7 @@
             <td>{{ pass.Type}}</td>
             <td>{{ pass.PurchaseDate }}</td>
             <td>{{ pass.ExpirationDate }}</td>
-            <td>{{ pass.Skiers_SkierID }}</td>
+            <td>{{ pass.SkierName }}</td>
 
              {# DELETE form #}
             <td>
@@ -40,7 +42,6 @@
     </tbody>
 </table>
 
---- create passes ----
 <h2>Create Passes</h2>
 
 
@@ -59,10 +60,6 @@
        name="create_purchase_date"
        required>
 
-<label>Expiration Date:</label>
-<input type="datetime-local"
-       name="create_expiration_date"
-       required>
 
 <label>Skier:</label>
 <select name="create_skier_skierId" required>
