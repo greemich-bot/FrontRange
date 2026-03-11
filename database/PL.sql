@@ -372,3 +372,37 @@ BEGIN
     WHERE TrailID = t_id; 
 END //
 DELIMITER ;
+
+
+-- #############################
+-- DELETE SkiersRntals
+-- #############################
+DROP PROCEDURE IF EXISTS sp_DeleteSkiersRentals;
+
+DELIMITER //
+
+CREATE PROCEDURE sp_DeleteSkiersRentals(IN sr_id INT)
+BEGIN
+    DECLARE error_message VARCHAR(255);
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+
+    DELETE FROM SkiersRentals
+    WHERE SkiersRentalsID = sr_id;
+
+    IF ROW_COUNT() = 0 THEN
+        SET error_message = CONCAT('No matching record found in SkiersRentals for id: ', sr_id);
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+    END IF;
+
+    COMMIT;
+
+END //
+
+DELIMITER ;
