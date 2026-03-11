@@ -11,33 +11,57 @@
             <th>ID</th>
             <th>Skier Name</th>
             <th>Lift Name</th>
-            <th>Actions</th>
+            <th>Delete</th>
         </tr>
     </thead>
 
     <tbody>
-        {# For each row, print the id, fname, lname, homeworld and age #}
         {% for skier in skierslifts %}
         <tr>
             <td>{{ skier.SkiersLiftsID }}</td>
             <td>{{ skier.SkierName }}</td>
             <td>{{ skier.LiftName }}</td>
-            
+            <form id="delete_skierlift_form" action="/skierslifts/delete" method="POST">
+    
+    <input type="hidden" name="delete_skierslifts_id" value="{{ skier.SkiersLiftsID }}">
+    
+    <td>
+        <button type="submit" onclick="return confirm('Are you sure you want to delete this ride?')">
+            Delete
+        </button>
+    </td>
+</form>
 
             {# DELETE form #}
-            <form id="delete_skierlift_form">
-                <input type="hidden" name="delete_skierlift_id" value="{{ skier.SkiersLiftsID }}">
-                <input type="hidden" name="delete_skierlift_name" value="{{ skier.SkierName }}">
-                <td>
-                    <button type="submit">
-                        Delete
-                    </button>
-                </td>
-            </form>
+            
         </tr>
         {% endfor %}
     </tbody>
 </table>
+
+{# CREATE form #}
+<h2>Add a Lift Ride</h2>
+<form class="cuForm" id="add_skierlift_form" action="/skierslifts/create" method="POST">
+    
+    <label for="create_skier_skierId">Skier: </label>
+<select name="create_skier_skierId" id="create_skier_skierId" required>
+    <option value="" disabled selected>Select a Skier</option>
+    {% for skier in skiers %}
+    <option value="{{skier['SkierID']}}">{{skier['Name']}}</option>
+    {% endfor %}
+</select>
+
+<label for="create_lift_liftId">Lift: </label>
+<select name="create_lift_liftId" id="create_lift_liftId" required>
+    <option value="" disabled selected>Select a Lift</option>
+    {% for lift in lifts %}
+    <option value="{{lift['LiftID']}}">{{lift['LiftName']}}</option>
+    {% endfor %}
+</select>
+
+
+    <input type="submit" value="Add Lift Ride">
+</form>
 
 
 {% endblock %}

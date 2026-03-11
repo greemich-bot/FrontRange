@@ -34,23 +34,23 @@ DROP PROCEDURE IF EXISTS sp_UpdateSkier;
 DELIMITER //
 CREATE PROCEDURE sp_UpdateSkier(
     IN s_id INT, 
-    IN s_name VARCHAR(255), 
+    IN s_name VARCHAR(45), 
     IN s_address VARCHAR(255), 
-    IN s_phone VARCHAR(50), 
+    IN s_phone VARCHAR(20), 
     IN s_email VARCHAR(255), 
-    IN s_ability VARCHAR(50)
+    IN s_ability VARCHAR(45)
 )
 BEGIN
-    -- Verify if your column is 'id' or 'SkierID'
     UPDATE Skiers 
     SET Name = s_name, 
         Address = s_address, 
         Phone = s_phone, 
         Email = s_email, 
         Ability = s_ability 
-    WHERE SkierID = s_id; -- Changed 'id' to 'SkierID' to match your Jinja2
+    WHERE SkierID = s_id;
 END //
 DELIMITER ;
+
 
 -- #############################
 -- DELETE Skiers
@@ -99,24 +99,38 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS sp_CreatePass;
 
 DELIMITER //
-create procedure sp_CreatePass(
-    in p_type varchar(45),
-    in p_purchaseDate DATETIME,
-    in p_expirationDate DATETIME,
-    in p_skiers_SkierID INT,
-    out p_id int)
+
+CREATE PROCEDURE sp_CreatePass (
+    IN p_Type VARCHAR(45),
+    IN p_PurchaseDate DATETIME,
+    IN p_SkierID INT,
+    OUT p_new_id INT
+)
 BEGIN
-	insert INTO Passes(Type, PurchaseDate, ExpirationDate, Skiers_SkierID)
-    VALUES (p_type, p_purchaseDate, p_expirationDate, p_skiers_SkierID);
-    
-    -- store the pass id of the last inserted row:
-    select last_insert_id() into p_id;
-    -- then display id of the last inserted row
-    select last_insert_id() AS 'p_new_id';
-    
-   
+    DECLARE v_ExpDate DATETIME;
+
+    -- Automatic Logic based on Type
+    IF p_Type = 'Day Pass' THEN
+        SET v_ExpDate = DATE_ADD(p_PurchaseDate, INTERVAL 1 DAY);
+    ELSEIF p_Type = '3-Day Pass' THEN
+        SET v_ExpDate = DATE_ADD(p_PurchaseDate, INTERVAL 3 DAY);
+    ELSEIF p_Type = 'Full Season' THEN
+        SET v_ExpDate = DATE_ADD(p_PurchaseDate, INTERVAL 6 MONTH);
+    ELSE
+        SET v_ExpDate = DATE_ADD(p_PurchaseDate, INTERVAL 7 DAY); -- Default
+    END IF;
+
+    INSERT INTO Passes (Type, PurchaseDate, ExpirationDate, Skiers_SkierID)
+    VALUES (p_Type, p_PurchaseDate, v_ExpDate, p_SkierID);
+
+    SET p_new_id = LAST_INSERT_ID();
 END //
-DELIMITER ;   
+
+DELIMITER ;
+ 
+
+
+
 
 -- #############################
 -- DELETE Passes
@@ -212,6 +226,78 @@ END //
 DELIMITER ;
 
 
+# -----------------------------------------------------------------
+# SkiersLifts Page PL/SQL
+# -----------------------------------------------------------------
+-- create skierslifts sp
+DROP PROCEDURE IF EXISTS sp_CreateSkiersLifts;
+
+DELIMITER //
+create procedure sp_CreateSkiersLifts(
+    in sl_skierID INT,
+    in sl_liftID INT,
+    out sl_id INT
+)
+BEGIN
+    insert INTO SkiersLifts(Skiers_SkierID, Lifts_LiftID)
+    VALUES (sl_skierID, sl_liftID);
+
+    -- This stores the value in your OUT parameter
+    SELECT LAST_INSERT_ID() INTO sl_id;
+    -- then display id of the last inserted row
+    SELECT LAST_INSERT_ID() AS 'sl_new_id';
+END //
+DELIMITER ;
+
+# - update skierslifts sp
+DROP PROCEDURE IF EXISTS sp_UpdateSkiersLifts;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateSkiersLifts(
+    IN sl_id INT,
+    IN sl_skierID INT,
+    IN sl_liftID INT
+)
+BEGIN
+    UPDATE SkiersLifts
+    SET Skiers_SkierID = sl_skierID,
+        Lifts_LiftID = sl_liftID
+    WHERE SkiersLiftsID = sl_id;
+END //
+DELIMITER ;
+
+# delete skierslifts sp
+DROP PROCEDURE IF EXISTS sp_DeleteSkiersLifts;
+
+DELIMITER //
+CREATE PROCEDURE sp_DeleteSkiersLifts(IN sl_id INT)
+BEGIN
+    DECLARE error_message VARCHAR(255); 
+
+    -- error handling
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- Roll back the transaction on any error
+        ROLLBACK;
+        -- Propogate the custom error message to the caller
+        RESIGNAL;
+    END;
+
+    START TRANSACTION;
+        -- Deleting corresponding rows from both SkiersLifts table
+        DELETE FROM SkiersLifts WHERE SkiersLiftsID = sl_id;
+        
+        -- ROW_COUNT() returns the number of rows affected by the preceding statement.
+        IF ROW_COUNT() = 0 THEN
+            set error_message = CONCAT('No matching record found in SkiersLifts for id: ', sl_id);
+            -- Trigger custom error, invoke EXIT HANDLER
+            SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = error_message;
+        END IF;
+
+    COMMIT;
+
+END //
+DELIMITER ;
 
 # ------------------------------------------------------------------
 # Rental Inventory Page PL/SQL
