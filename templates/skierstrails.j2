@@ -11,23 +11,20 @@
             <th>ID</th>
             <th>Skier Name</th>
             <th>Trail Name</th>
-            <th>Actions</th>
+            <th>Delete</th>
         </tr>
     </thead>
 
     <tbody>
-        {# For each row, print the id, fname, lname, homeworld and age #}
+        {# For each row, print the id, skiername, trailname #}
         {% for skier in skierstrails %}
         <tr>
             <td>{{ skier.SkiersTrailsID }}</td>
             <td>{{ skier.SkierName }}</td>
             <td>{{ skier.TrailName }}</td>
-            
-
-            {# DELETE form #}
-            <form id="delete_skiertrail_form">
-                <input type="hidden" name="delete_skiertrail_id" value="{{ skier.SkiersTrailsID }}">
-                <input type="hidden" name="delete_skiertrail_name" value="{{ skier.SkierName }}">
+        
+            <form id="delete_skierstrails_form"  action="/skierstrails/delete" method="POST">
+            <input type="hidden" name="delete_skierstrails_id" value="{{ skier.SkiersTrailsID }}">
                 <td>
                     <button type="submit">
                         Delete

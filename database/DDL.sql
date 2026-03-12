@@ -134,9 +134,11 @@ CREATE TABLE IF NOT EXISTS `SkiersTrails` (
 ENGINE = InnoDB;
 
 INSERT INTO `SkiersTrails` (`Skiers_SkierID`, `Trails_TrailID`) VALUES
-(1, 1),
-(2, 3),
-(3, 2);
+(2, 2),
+(4, 1),
+(5, 3),
+(6, 2),
+(7, 1);
   
 -- -----------------------------------------------------
 -- create Pass Table
@@ -212,8 +214,10 @@ ENGINE = InnoDB;
 -- Intersection Table: Skier Rentals
 INSERT INTO `SkiersRentals` (`Skiers_SkierID`, `RentalInventory_RentalID`) VALUES
 (2, 2),
-(3, 1),
-(3, 3);
+(4, 1),
+(5, 3),
+(6, 2),
+(7, 1);
 
 
 

@@ -6,7 +6,7 @@ from tokenize import Name
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 
-PORT = 10006
+PORT = 8085
 
 app = Flask(__name__)
 
@@ -470,6 +470,26 @@ def delete_skiersrentals():
             dbConnection.close()
 
 
+
+################ delete skierstrails ###########
+@app.route("/skierstrails/delete", methods=["POST"])
+def delete_skierstrails():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        st_id = request.form["delete_skierstrails_id"]
+
+        cursor.execute("CALL sp_DeleteSkiersTrails(%s);", (st_id,))
+        dbConnection.commit()
+
+        print(f"DELETE skierstrails. ID: {st_id}")
+
+        return redirect("/skierstrails")
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
 # --------------------------------------------------------------------------------------------------
 # Passes CRD
 # only need Create, Read, and Delete
