@@ -47,3 +47,12 @@ Links to an external site.
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 
+# Date: 3/13/26 
+       # Prompts used to add logic for to update rentals button
+4      # I provided my route and asked for an update form that only appears after the button is pressed and is automatically filled with the row ID 
+       # Gemini provided a route update to my get method which I used and an if statement containing a form that I copied directly.
+7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
+
+
