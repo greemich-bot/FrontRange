@@ -14,7 +14,7 @@ app = Flask(__name__)
 # ########################################
 # ########## ROUTE HANDLERS
 
-# READ ROUTES
+# READ ROUTES adapted from build app.py starter.
 @app.route("/", methods=["GET"])
 def home():
     try:
@@ -56,7 +56,7 @@ def reset_database():
 # Skiers CRUD routes
 # ---------------------------------------------------------------------------------------------------------
 # #####################################################################
-# READ for Skiers
+# READ for Skiers adapted from build app.py starter.
 # #####################################################################
 @app.route("/skiers", methods=["GET"])
 def skiers():
@@ -214,7 +214,7 @@ def delete_skiers():
 # Lifts CRUD routes
 # ---------------------------------------------------------------------------------------------------------
 # #####################################################################
-# READ for Lifts
+# READ for Lifts adapted from build app.py starter.
 # #####################################################################
 
 @app.route("/lifts", methods=["GET"])
@@ -328,7 +328,7 @@ def update_lifts():
 # no need for update
 # --------------------------------------------------------------------------------------------------
 # #####################################################################
-# READ for SkiersLifts
+# READ for SkiersLifts adapted from build app.py starter with our own queries.
 # #####################################################################
 
 @app.route("/skierslifts", methods=["GET"])
@@ -453,7 +453,7 @@ def delete_skierslifts():
 # --------------------------------------------------------------------------------------------------
 
 # #####################################################################
-# READ for Passes
+# READ for Passes adapted from build app.py starter with our own queries.
 # #####################################################################
 
 @app.route("/passes", methods=["GET"])
@@ -564,7 +564,7 @@ def delete_passes():
 # only need Create, Read, and Delete
 # -------------------------------------------------------------------------------------------------
 # #####################################################################
-# READ for RentalInventory
+# READ for RentalInventory adapted from build app.py starter with our own queries.
 # #####################################################################
 @app.route("/rentalinventory", methods=["GET"])
 def rentalinventory():
@@ -680,7 +680,8 @@ def delete_rentalinventory():
 # --------------------------------------------------------------------------------------------------
 
 # ########################################################################
-# READ for SkiersRentals
+# READ for SkiersRentals adapted from build app.py starter with queries that were provided by Gemini
+# that helped us with our first iteration of the update button and were functional after implementing the SP.
 # #######################################################################
 
 @app.route("/skiersrentals", methods=["GET"])
@@ -814,7 +815,7 @@ def delete_skiersrentals():
 # Trails 
 # --------------------------------------------------------------------------------------------------
 # #####################################################################
-# Read for Trails
+# Read for Trails adapted from build app.py starter with our own queries.
 # #####################################################################
 @app.route("/trails", methods=["GET"])
 def trails():
@@ -886,7 +887,7 @@ def update_trails():
 # only need read, update, and delete
 # --------------------------------------------------------------------------------------------------
 # #####################################################################
-# READ for Skierstrails
+# READ for Skierstrails adapted from build app.py starter 
 # #####################################################################
 @app.route("/skierstrails", methods=["GET"])
 def skierstrails():
