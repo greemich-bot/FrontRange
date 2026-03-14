@@ -1,12 +1,12 @@
 # ########################################
 # ########## SETUP
 
-from tokenize import Name
+
 
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
 
-PORT = 8085
+PORT = 8089
 
 app = Flask(__name__)
 
@@ -449,25 +449,6 @@ def delete_skierslifts():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-################ delete skiersrentals ###########
-@app.route("/skiersrentals/delete", methods=["POST"])
-def delete_skiersrentals():
-    try:
-        dbConnection = db.connectDB()
-        cursor = dbConnection.cursor()
-
-        sr_id = request.form["delete_skiersrentals_id"]
-
-        cursor.execute("CALL sp_DeleteSkiersRentals(%s);", (sr_id,))
-        dbConnection.commit()
-
-        print(f"DELETE skiersrentals. ID: {sr_id}")
-
-        return redirect("/skiersrentals")
-
-    finally:
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
 
 
 
@@ -674,51 +655,126 @@ def delete_rentalinventory():
 # --------------------------------------------------------------------------------------------------
 @app.route("/skiersrentals", methods=["GET"])
 def skiersrentals():
+    dbConnection = None
     try:
         dbConnection = db.connectDB()
-        # The query MUST match the aliases used in your .j2 template
-        query = """
-            SELECT 
-                SkiersRentals.SkiersRentalsID, 
-                Skiers.Name AS SkierName, 
-                RentalInventory.Type AS ItemType
-            FROM SkiersRentals
-            JOIN Skiers ON SkiersRentals.Skiers_SkierID = Skiers.SkierID
-            JOIN RentalInventory ON SkiersRentals.RentalInventory_RentalID = RentalInventory.RentalID;
+        
+        # 1. Standard queries for the table and dropdowns
+        query_main = """
+            SELECT SkiersRentals.SkiersRentalsID, Skiers.Name AS SkierName, RentalInventory.Type AS ItemType 
+            FROM SkiersRentals 
+            JOIN Skiers ON Skiers_SkierID = SkierID 
+            JOIN RentalInventory ON RentalInventory_RentalID = RentalID;
         """
-        result = db.query(dbConnection, query).fetchall()
-        return render_template("skiersrentals.j2", skiersrentals=result)
-    except Exception as e:
-        print(f"Error: {e}")
-        return "An error occurred while executing the database queries.", 500
+        results = db.query(dbConnection, query_main).fetchall()
+        skiers_list = db.query(dbConnection, "SELECT SkierID, Name FROM Skiers;").fetchall()
+        items_list = db.query(dbConnection, "SELECT RentalID, Type FROM RentalInventory;").fetchall()
+        
+        # 2. Check if a specific ID was passed for updating (e.g., /skiersrentals?id=5)
+        rental_to_update = None
+        target_id = request.args.get('id')
+        
+        if target_id:
+            # Fetch the specific record to pre-fill the update form
+            query_single = "SELECT * FROM SkiersRentals WHERE SkiersRentalsID = %s;"
+            rental_to_update = db.query(dbConnection, query_single, (target_id,)).fetchone()
+
+        return render_template("skiersrentals.j2", 
+                               skiersrentals=results, 
+                               skiers=skiers_list, 
+                               rentals=items_list,
+                               rental=rental_to_update) # This prevents the 'undefined' error
     finally:
-        if "dbConnection" in locals():
+        if dbConnection:
+            dbConnection.close()
+
+
+# --- CREATE ROUTE ---
+@app.route("/skiersrentals/create", methods=["POST"])
+def create_skiersrentals():
+    dbConnection = None
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        s_id = request.form["create_skier_skierId"]
+        r_id = request.form["create_rental_rentalId"]
+
+        # Call procedure with OUT parameter
+        cursor.execute("CALL sp_CreateSkiersRentals(%s, %s, @sr_id);", (s_id, r_id))
+        
+        # Clear cursor to prevent "Commands out of sync" error
+        while cursor.nextset():
+            pass
+
+        dbConnection.commit()
+        return redirect("/skiersrentals")
+    except Exception as e:
+        print(f"CREATE ERROR: {e}")
+        return "Failed to create rental.", 500
+    finally:
+        if dbConnection:
+            dbConnection.close()
+
+
+@app.route("/skiersrentals/update", methods=["POST"])
+def update_skiersrentals():
+    dbConnection = None
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        # 1. Capture the IDs from the form
+        # 'update_rental_id' is usually a hidden input in your edit form
+        rental_id = request.form["update_rental_id"]
+        skier_id = request.form["update_skier_id"]
+        item_id = request.form["update_item_id"]
+
+        # 2. Call the Update Stored Procedure
+        cursor.execute(
+            "CALL sp_UpdateSkiersRentals(%s, %s, %s);", 
+            (rental_id, skier_id, item_id)
+        )
+        
+        # Clear cursor and commit
+        while cursor.nextset():
+            pass
+        dbConnection.commit()
+        
+        print(f"Successfully updated Rental ID: {rental_id}")
+        return redirect("/skiersrentals")
+
+    except Exception as e:
+        print(f"UPDATE ERROR: {e}")
+        return f"Update failed: {e}", 500
+        
+    finally:
+        if dbConnection:
             dbConnection.close()
 
 
 
 
 
-@app.route('/edit_rental/<int:rental_id>', methods=['GET', 'POST'])
-def edit_rental(rental_id):
-    dbConnection = db.connectDB()
-    
-    if request.method == 'GET':
-        # Fetch the specific rental to pre-populate the form
-        query = "SELECT * FROM SkiersRentals WHERE SkiersRentalsID = %s;"
-        rental_data = db.query(dbConnection, query, (rental_id,)).fetchone()
-        return render_template('edit_rental.j2', rental=rental_data)
+################ delete skiersrentals ###########
+@app.route("/skiersrentals/delete", methods=["POST"])
+def delete_skiersrentals():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
 
-    if request.method == 'POST':
-        # Get data from the submitted form
-        skier_id = request.form['skier_id']
-        inventory_id = request.form['inventory_id']
-        
-        # Execute the update
-        query = "UPDATE SkiersRentals SET Skiers_SkierID = %s, RentalInventory_RentalID = %s WHERE SkiersRentalsID = %s;"
-        db.query(dbConnection, query, (skier_id, inventory_id, rental_id))
-        
+        sr_id = request.form["delete_skiersrentals_id"]
+
+        cursor.execute("CALL sp_DeleteSkiersRentals(%s);", (sr_id,))
+        dbConnection.commit()
+
+        print(f"DELETE skiersrentals. ID: {sr_id}")
+
         return redirect("/skiersrentals")
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
 
 
 # --------------------------------------------------------------------------------------------------

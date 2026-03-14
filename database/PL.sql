@@ -373,6 +373,46 @@ BEGIN
 END //
 DELIMITER ;
 
+# ------------------------------------------------------------------
+# SkiersRentals
+# ------------------------------------------------------------------
+-- create skiersrentals sp
+DROP PROCEDURE IF EXISTS sp_CreateSkiersRentals;
+
+DELIMITER //
+CREATE PROCEDURE sp_CreateSkiersRentals(
+    IN sr_skierID INT,
+    IN sr_rentalID INT,
+    OUT sr_id INT
+)
+BEGIN
+    INSERT INTO SkiersRentals(Skiers_SkierID, RentalInventory_RentalID)
+    VALUES (sr_skierID, sr_rentalID);
+
+    SELECT LAST_INSERT_ID() INTO sr_id;   
+    
+    
+END //
+DELIMITER ;
+
+
+DROP PROCEDURE IF EXISTS sp_UpdateSkiersRentals;
+
+DELIMITER //
+CREATE PROCEDURE sp_UpdateSkiersRentals(
+    IN sr_id INT,
+    IN sr_skierID INT,
+    IN sr_rentalID INT
+)
+BEGIN
+    UPDATE SkiersRentals 
+    SET Skiers_SkierID = sr_skierID, 
+        RentalInventory_RentalID = sr_rentalID
+    WHERE SkiersRentalsID = sr_id;
+END //
+DELIMITER ;
+
+
 
 -- #############################
 -- DELETE SkiersRntals

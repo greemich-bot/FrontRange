@@ -14,23 +14,24 @@
     </thead>
 
     <tbody>
-        {% for skier in skiersrentals %}
+        {% for item in skiersrentals %}
         <tr>
-            <td>{{ skier.SkiersRentalsID }}</td>
-            <td>{{ skier.SkierName }}</td>
-            <td>{{ skier.ItemType }}</td>
+            <!-- Using . notation or ['key'] based on your connector -->
+            <td>{{ item.SkiersRentalsID or item['SkiersRentalsID'] }}</td>
+            <td>{{ item.SkierName or item['SkierName'] }}</td>
+            <td>{{ item.ItemType or item['ItemType'] }}</td>
             <td>
                 <div style="display: flex; gap: 10px;">
                     <!-- Update Button -->
-                    <a href="{{ url_for('edit_rental', rental_id=skier.SkiersRentalsID) }}">
+                    <a href="{{ url_for('skiersrentals', id=item.SkiersRentalsID) }}">
                         <button type="button">Update</button>
                     </a>
 
                     <!-- Delete Form -->
-                    <form method="POST" action="/skiersrentals/delete">
-                    <input type="hidden" name="delete_skiersrentals_id" value="{{ skier.SkiersRentalsID }}">
-                    <button type="submit">Delete</button>
-            </form>
+                    <form method="POST" action="/skiersrentals/delete" style="margin:0;">
+                        <input type="hidden" name="delete_skiersrentals_id" value="{{ item.SkiersRentalsID or item['SkiersRentalsID'] }}">
+                        <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                    </form>
                 </div>
             </td>
         </tr>
@@ -42,6 +43,66 @@
     </tbody>
 </table>
 
+{% if rental %}
+<h2>Update Rental #{{ rental.SkiersRentalsID or rental[0] }}</h2>
+    <form action="/skiersrentals/update" method="POST">
+        <!-- Hidden PK so the SP knows which row to change -->
+        <input type="hidden" name="update_rental_id" value="{{ rental.SkiersRentalsID or rental[0] }}">
+
+        <label>Change Skier:</label>
+        <select name="update_skier_id">
+            {% for s in skiers %}
+                <!-- Auto-select the current skier -->
+                <option value="{{ s.SkierID or s[0] }}" 
+                    {% if (s.SkierID or s[0]) == (rental.Skiers_SkierID or rental[1]) %}selected{% endif %}>
+                    {{ s.Name or s[1] }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label>Change Item:</label>
+        <select name="update_item_id">
+            {% for r in rentals %}
+                <!-- Auto-select the current item -->
+                <option value="{{ r.RentalID or r[0] }}" 
+                    {% if (r.RentalID or r[0]) == (rental.RentalInventory_RentalID or rental[2]) %}selected{% endif %}>
+                    {{ r.Type or r[1] }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Save Changes</button>
+        <a href="{{ url_for('skiersrentals') }}"><button type="button">Cancel</button></a>
+    </form>
+{% endif %}
+
+
+
+<h2>Rent Some Gear!</h2>
+<form class="cuForm" id="add_skiersrentals_form" action="/skiersrentals/create" method="POST">
+    
+    <label for="create_skier_skierId">Skier: </label>
+    <select name="create_skier_skierId" id="create_skier_skierId" required>
+        <option value="" disabled selected>Select a Skier</option>
+        {% for s in skiers %}
+        <option value="{{ s.SkierID or s['SkierID'] }}">{{ s.Name or s['Name'] }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="create_rental_rentalId">Rental Item: </label>
+    <select name="create_rental_rentalId" id="create_rental_rentalId" required>
+        <option value="" disabled selected>Select a Rental Item</option>
+        {% for r in rentals %}
+        <option value="{{ r.RentalID or r['RentalID'] }}">{{ r.Type or r['Type'] }}</option>
+        {% endfor %}
+    </select>
+
+    <input type="submit" value="Rent It!">
+</form>
+
+
+
 {% endblock %}
+
 
 
