@@ -446,6 +446,27 @@ BEGIN
 END //
 
 DELIMITER ;
+# ------------------------------------------------------------------
+# SkiersTrails
+# ------------------------------------------------------------------
+# create skierstrails sp
+# Adapted from starter code
+DROP PROCEDURE IF EXISTS sp_CreateSkiersTrails;
+DELIMITER //
+CREATE PROCEDURE sp_CreateSkiersTrails(
+    IN st_skierID INT,
+    IN st_trailID INT,
+    OUT st_id INT
+)
+BEGIN
+    INSERT INTO SkiersTrails(Skiers_SkierID, Trails_TrailID)
+    VALUES (st_skierID, st_trailID);
+
+    SELECT LAST_INSERT_ID() INTO st_id; 
+    SELECT LAST_INSERT_ID() AS 'st_new_id';  
+    
+END //
+DELIMITER ;
 
 # delete skierstrails sp
 DROP PROCEDURE IF EXISTS sp_DeleteSkiersTrails;

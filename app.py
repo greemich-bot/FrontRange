@@ -452,25 +452,7 @@ def delete_skierslifts():
 
 
 
-################ delete skierstrails ###########
-@app.route("/skierstrails/delete", methods=["POST"])
-def delete_skierstrails():
-    try:
-        dbConnection = db.connectDB()
-        cursor = dbConnection.cursor()
 
-        st_id = request.form["delete_skierstrails_id"]
-
-        cursor.execute("CALL sp_DeleteSkiersTrails(%s);", (st_id,))
-        dbConnection.commit()
-
-        print(f"DELETE skierstrails. ID: {st_id}")
-
-        return redirect("/skierstrails")
-
-    finally:
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
 # --------------------------------------------------------------------------------------------------
 # Passes CRD
 # only need Create, Read, and Delete
@@ -866,10 +848,16 @@ def skierstrails():
         
         skierstrails = db.query(dbConnection, query1).fetchall()
 
+        query2 = "SELECT SkierID, Name FROM Skiers;"
+        skiers = db.query(dbConnection, query2).fetchall()  
+
+        query3 = "SELECT TrailID, TrailName FROM Trails;"
+        trails = db.query(dbConnection, query3).fetchall()
+
         # Render the skierstrails.j2 file, and also send the renderer
         # a couple objects that contains skierstrails information
         return render_template(
-            "skierstrails.j2", skierstrails=skierstrails      
+            "skierstrails.j2", skierstrails=skierstrails, skiers=skiers, trails=trails
         )
 
     except Exception as e:
@@ -878,6 +866,58 @@ def skierstrails():
 
     finally:
         # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+# create skierstrails
+@app.route("/skierstrails/create", methods=["POST"])
+def create_skierstrails():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        Skiers_SkierID = int(request.form["create_skier_skierId"])
+        Trails_TrailID = int(request.form["create_trail_trailId"])
+
+        cursor.execute(
+            "CALL sp_CreateSkiersTrails(%s,%s,@new_id);",
+            (Skiers_SkierID, Trails_TrailID)
+        )
+
+        cursor.nextset()
+
+        cursor.execute("SELECT @new_id;")
+        new_id = cursor.fetchone()[0]
+
+        dbConnection.commit()
+
+        return redirect("/skierstrails")
+
+    except Exception as e:
+        print("REAL ERROR:", e)
+        return ("Create skierstrails failed", 500)
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+################ delete skierstrails ###########
+@app.route("/skierstrails/delete", methods=["POST"])
+def delete_skierstrails():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        st_id = request.form["delete_skierstrails_id"]
+
+        cursor.execute("CALL sp_DeleteSkiersTrails(%s);", (st_id,))
+        dbConnection.commit()
+
+        print(f"DELETE skierstrails. ID: {st_id}")
+
+        return redirect("/skierstrails")
+
+    finally:
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
