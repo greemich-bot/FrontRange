@@ -25,7 +25,7 @@ def home():
 
 
 # -----------------------------------------------------------------------------------------
-# Reset Route
+# Reset Route - Implemented with the PL wrapper and adapted from the example in class.
 # -----------------------------------------------------------------------------------------
 @app.route("/reset-db", methods=["POST"])
 def reset_database():
@@ -54,6 +54,9 @@ def reset_database():
 # ---------------------------------------------------------------------------------------------------------
 # Skiers CRUD routes
 # ---------------------------------------------------------------------------------------------------------
+######################################################################
+# READ for Skiers
+######################################################################
 @app.route("/skiers", methods=["GET"])
 def skiers():
     try:
@@ -81,7 +84,9 @@ def skiers():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# create skier
+######################################################################
+# CREATE for Skiers
+######################################################################
 
 @app.route("/skiers/create", methods=["POST"])
 def create_skiers():
@@ -116,12 +121,16 @@ def create_skiers():
         # Redirect to the updated webpage by add the path /skiers
         return redirect("/skiers")
     except Exception as e:
-        print(f"Error executing quereis: {e}")
+        print(f"Error executing queries: {e}")
         return ("An error occurred while executing skiers/create this database queries. ", 500,) # ProgError, OpsError, DBError? can be more specific
     finally:
         # Close the DB Conneciton, if it exists:
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
+
+######################################################################
+# UPDATE for Skiers
+######################################################################
 
 @app.route('/skiers/update', methods=['POST'])
 def update_skier():
@@ -161,42 +170,10 @@ def update_skier():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+######################################################################
+# DELETE for Skiers
+######################################################################
 
-# delete pass
-@app.route("/passes/delete", methods=["POST"])
-def delete_passes():
-    try:
-        dbConnection = db.connectDB()  # Open our database connection
-        cursor = dbConnection.cursor()
-
-        # Get form data
-        pass_id = request.form["delete_pass_id"]
-
-        # Create and execute our queries
-        # Using parameterized queries (Prevents SQL injection attacks)
-        query1 = "CALL sp_DeletePass(%s);"
-        cursor.execute(query1, (pass_id,))
-
-        dbConnection.commit()  # commit the transaction
-
-        print(f"DELETE pass. ID: {pass_id} Name: {pass_id}")
-
-        # Redirect the user to the updated webpage
-        return redirect("/passes")
-
-    except Exception as e:
-        print(f"Error executing queries: {e}")
-        return (
-            "An error occurred while executing the database queries.",
-            500,
-        )
-
-    finally:
-        # Close the DB connection, if it exists
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
-
-# delete skier
 @app.route("/skiers/delete", methods=["POST"])
 def delete_skiers():
     try:
@@ -232,7 +209,44 @@ def delete_skiers():
             dbConnection.close()
 
 
-# delete Lifts
+
+# ---------------------------------------------------------------------------------------------------------
+# Lifts CRUD routes
+# ---------------------------------------------------------------------------------------------------------
+######################################################################
+# READ for Lifts
+######################################################################
+
+@app.route("/lifts", methods=["GET"])
+def lifts():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+
+        # Create and execute our queries
+        # In query1, we use a JOIN clause to display the names of the homeworlds,
+        #       instead of just ID values
+        query1 = "SELECT * FROM Lifts;"
+        
+        lifts = db.query(dbConnection, query1).fetchall()
+
+        # Render the lifts.j2 file, and also send the renderer
+        # a couple objects that contains lifts information
+        return render_template(
+            "lifts.j2", lifts=lifts      
+        )
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return "An error occurred while executing the database queries.", 500
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+######################################################################
+# DELETE for Lifts
+######################################################################
 @app.route("/lifts/delete", methods=["POST"])
 def delete_lifts():
     try:
@@ -267,7 +281,9 @@ def delete_lifts():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# Lifts update
+######################################################################
+# UPDATE for Lifts
+######################################################################
 
 @app.route('/lifts/update', methods=['POST'])
 def update_lifts():
@@ -291,11 +307,11 @@ def update_lifts():
         
         print(f"UPDATE lifts successful. ID: {l_id}")
 
-        # 4. Redirect back to the skiers table
+        # 4. Redirect back to the lifts table
         return redirect("/lifts")
 
     except Exception as e:
-        print(f"Error updating skier: {e}")
+        print(f"Error updating lifts: {e}")
         return "An error occurred while updating the lifts.", 500
 
     finally:
@@ -303,43 +319,17 @@ def update_lifts():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# -------------------------------------------------------------------------------------------------
-# Lifts RU
-# only need read and update
-# -------------------------------------------------------------------------------------------------
 
-@app.route("/lifts", methods=["GET"])
-def lifts():
-    try:
-        dbConnection = db.connectDB()  # Open our database connection
 
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
-        query1 = "SELECT * FROM Lifts;"
-        
-        lifts = db.query(dbConnection, query1).fetchall()
 
-        # Render the lifts.j2 file, and also send the renderer
-        # a couple objects that contains lifts information
-        return render_template(
-            "lifts.j2", lifts=lifts      
-        )
-
-    except Exception as e:
-        print(f"Error executing queries: {e}")
-        return "An error occurred while executing the database queries.", 500
-
-    finally:
-        # Close the DB connection, if it exists
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
 
 # --------------------------------------------------------------------------------------------------
 # SkiersLifts CRD
 # no need for update
 # --------------------------------------------------------------------------------------------------
-
+######################################################################
+# READ for SkiersLifts
+######################################################################
 
 @app.route("/skierslifts", methods=["GET"])
 def skierslifts():
@@ -382,7 +372,9 @@ def skierslifts():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# create skierslifts
+######################################################################
+# CREATE for SkiersLifts
+######################################################################
 @app.route("/skierslifts/create", methods=["POST"])
 def create_skierslifts():
     try:
@@ -414,7 +406,9 @@ def create_skierslifts():
         if "dbConnection" in locals():
             dbConnection.close()
 
-# delete skierslifts
+######################################################################
+# DELETE for SkiersLifts
+######################################################################
 @app.route("/skierslifts/delete", methods=["POST"])
 def delete_skierslifts():
     try:
@@ -458,7 +452,9 @@ def delete_skierslifts():
 # only need Create, Read, and Delete
 # --------------------------------------------------------------------------------------------------
 
-
+#########################################################################
+# READ for Passes
+#########################################################################
 
 @app.route("/passes", methods=["GET"])
 def passes():
@@ -492,7 +488,9 @@ def passes():
         if "dbConnection" in locals():
             dbConnection.close()
 
-# create pass
+#########################################################################
+# CREATE for Passes
+#########################################################################
 @app.route("/passes/create", methods=["POST"])
 def create_passes():
     try:
@@ -524,11 +522,50 @@ def create_passes():
         if "dbConnection" in locals():
             dbConnection.close()
 
+#########################################################################
+# DELETE for Passes
+#########################################################################
+@app.route("/passes/delete", methods=["POST"])
+def delete_passes():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+        cursor = dbConnection.cursor()
+
+        # Get form data
+        pass_id = request.form["delete_pass_id"]
+
+        # Create and execute our queries
+        # Using parameterized queries (Prevents SQL injection attacks)
+        query1 = "CALL sp_DeletePass(%s);"
+        cursor.execute(query1, (pass_id,))
+
+        dbConnection.commit()  # commit the transaction
+
+        print(f"DELETE pass. ID: {pass_id} Name: {pass_id}")
+
+        # Redirect the user to the updated webpage
+        return redirect("/passes")
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return (
+            "An error occurred while executing the database queries.",
+            500,
+        )
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
 
 # --------------------------------------------------------------------------------------------------
 # RentalInventory CRD
 # only need Create, Read, and Delete
 # --------------------------------------------------------------------------------------------------
+#########################################################################
+# READ for RentalInventory
+#########################################################################
 @app.route("/rentalinventory", methods=["GET"])
 def rentalinventory():
     try:
@@ -556,7 +593,9 @@ def rentalinventory():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# create rental inventory item
+#########################################################################
+# CREATE for RentalInventory items
+#########################################################################
 @app.route("/rentalinventory/create", methods=["POST"])
 def create_rentalinventory():
     dbConnection = None
@@ -595,6 +634,10 @@ def create_rentalinventory():
         if dbConnection:
             cursor.close() # Clean up the cursor too
             dbConnection.close()
+
+#########################################################################
+# Delete for RentalInventory
+#########################################################################
 
 @app.route("/rentalinventory/delete", methods=["POST"])
 def delete_rentalinventory():
@@ -635,6 +678,11 @@ def delete_rentalinventory():
 # --------------------------------------------------------------------------------------------------
 # SkiersRentals CRUD
 # --------------------------------------------------------------------------------------------------
+
+#########################################################################
+# READ for SkiersRentals
+#########################################################################
+
 @app.route("/skiersrentals", methods=["GET"])
 def skiersrentals():
     dbConnection = None
@@ -671,7 +719,9 @@ def skiersrentals():
             dbConnection.close()
 
 
-# --- CREATE ROUTE ---
+#########################################################################
+# CREATE for SkiersRentals
+#########################################################################
 @app.route("/skiersrentals/create", methods=["POST"])
 def create_skiersrentals():
     dbConnection = None
@@ -698,7 +748,9 @@ def create_skiersrentals():
         if dbConnection:
             dbConnection.close()
 
-
+#########################################################################
+# UPDATE for SkiersRentals
+#########################################################################
 @app.route("/skiersrentals/update", methods=["POST"])
 def update_skiersrentals():
     dbConnection = None
@@ -735,10 +787,9 @@ def update_skiersrentals():
             dbConnection.close()
 
 
-
-
-
-################ delete skiersrentals ###########
+#########################################################################
+# DELETE for SkiersRentals
+#########################################################################
 @app.route("/skiersrentals/delete", methods=["POST"])
 def delete_skiersrentals():
     try:
@@ -760,9 +811,11 @@ def delete_skiersrentals():
 
 
 # --------------------------------------------------------------------------------------------------
-# SkiersTrails RU 
-# only need read and update
+# Trails 
 # --------------------------------------------------------------------------------------------------
+######################################################################
+# Read for Trails
+######################################################################
 @app.route("/trails", methods=["GET"])
 def trails():
     try:
@@ -789,6 +842,10 @@ def trails():
         # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
+
+######################################################################
+# UPDATE for Trails
+######################################################################
 
 @app.route('/trails/update', methods=['POST'])
 def update_trails():
@@ -828,6 +885,9 @@ def update_trails():
 # Skierstrails CRD
 # only need read, update, and delete
 # --------------------------------------------------------------------------------------------------
+######################################################################
+# READ for Skierstrails
+######################################################################
 @app.route("/skierstrails", methods=["GET"])
 def skierstrails():
     try:
@@ -869,7 +929,9 @@ def skierstrails():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# create skierstrails
+######################################################################
+# CREATE for Skierstrails
+######################################################################
 @app.route("/skierstrails/create", methods=["POST"])
 def create_skierstrails():
     try:
@@ -901,7 +963,9 @@ def create_skierstrails():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-################ delete skierstrails ###########
+######################################################################
+# DELETE for Skierstrails
+######################################################################
 @app.route("/skierstrails/delete", methods=["POST"])
 def delete_skierstrails():
     try:
