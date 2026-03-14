@@ -1,3 +1,6 @@
+
+# Sp adapted from the example
+# Data definition file was exported from MySQL Workbench after creating the schema and tables, then edited to add the insert statements for sample data.
 DROP PROCEDURE IF EXISTS sp_load_front_range_data;
 DELIMITER //
 CREATE PROCEDURE sp_load_front_range_data()
@@ -218,25 +221,6 @@ INSERT INTO `SkiersRentals` (`Skiers_SkierID`, `RentalInventory_RentalID`) VALUE
 (5, 3),
 (6, 2),
 (7, 1);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
