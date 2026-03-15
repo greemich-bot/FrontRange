@@ -28,7 +28,15 @@ Links to an external site.
        # Returned a route with all of the PL embedded, and the code for another j2 page where the information can be edited. 
        # This route was adjusted after we learned about SPs but we kept the queries because they were functional.
 7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
-Links to an external site. 
+Links to an external site.
+
+# Date 3/2/26
+       # Prompts used to add styling in our Home.j2 
+       # Asked Gemini to style a high visibility database reset button
+       # Content was copied directly aside from the action that was input manually. 
+       # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site.
+
 
 # Date: 3/9/2026
 3      # Prompts used to add logic for to Lifts Update button
