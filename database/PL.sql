@@ -332,6 +332,7 @@ BEGIN
 
 
     SELECT LAST_INSERT_ID() INTO p_id;
+    SELECT LAST_INSERT_ID() AS 'rental_new_id';
     
     
 END //
@@ -411,7 +412,8 @@ BEGIN
     INSERT INTO SkiersRentals(Skiers_SkierID, RentalInventory_RentalID)
     VALUES (sr_skierID, sr_rentalID);
 
-    SELECT LAST_INSERT_ID() INTO sr_id;   
+    SELECT LAST_INSERT_ID() INTO sr_id; 
+    select LAST_INSERT_ID() AS 'sr_new_id';  
     
     
 END //

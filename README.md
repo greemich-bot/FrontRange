@@ -25,7 +25,7 @@ Links to an external site.
 # Date: 2/15/2026
 3      # Prompts used to add functionality to SkiersRentals Update button
 4      # Help me add a button that updates skiers rentals by building a route.
-       # Returned a route with all of the PL embedded, and the code for another page where the information can be edited. 
+       # Returned a route with all of the PL embedded, and the code for another j2 page where the information can be edited. 
        # This route was adjusted after we learned about SPs but we kept the queries because they were functional.
 7      # AI Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
@@ -54,5 +54,10 @@ Links to an external site.
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 
+# Date: 3/13/26 
+       # Prompts used to add logic for to update rentals button
+       # Provided gemini my varchar limit and my current route, and asked it to show me how to slice an input that is too long. Implemented to safeguard invalid inputs. 
+7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
 
 

@@ -85,7 +85,8 @@ def skiers():
             dbConnection.close()
 
 # #####################################################################
-# CREATE for Skiers
+# CREATE for Skiers adapted from build app.py starter with our own queries and form data.
+# gemini helped us with slicing our name to enforce Varchar(45)
 # #####################################################################
 
 @app.route("/skiers/create", methods=["POST"])
@@ -94,11 +95,17 @@ def create_skiers():
         dbConnection = db.connectDB() # this opens skiers db connection
         cursor = dbConnection.cursor()
 
-        # Get form data. will do data cleansing try/catch blocks later since we don't have int input for the following attributes:
-        Name = request.form["create_skier_name"]
+        # Get form data. 
+        
+        Name = request.form["create_skier_name"][:45] # this is a way to enforce the varchar(45) limit on the input. it will raise an error if the input exceeds 45 characters.
+
         Address = request.form["create_skier_address"]
-        Phone = request.form["create_skier_phone"]
-        Email = request.form["create_skier_email"]
+        try:
+            Phone = int(request.form["create_skier_phone"])
+        except ValueError:
+           Phone = "9999999999" # default value if input is not a valid integer
+
+        Email = request.form["create_skier_email"][:255] # enforce varchar(255) limit on email input
         Ability = request.form["create_skier_ability"]
 
         # call create skier sp method. use parameterized queries to prevent injuection attacks like drop table or db.
@@ -142,10 +149,13 @@ def update_skier():
         # 2. Capture data from form 'name' attributes
         # Ensure these keys match the 'name' attributes in your skiers.j2 file
         s_id = request.form['update_skier_id']
-        s_name = request.form['update_skier_name']
+        s_name = request.form['update_skier_name'] [:45] # enforce varchar(45) limit on name input
         s_address = request.form['update_skier_address']
-        s_phone = request.form['update_skier_phone']
-        s_email = request.form['update_skier_email']
+        try:
+            s_phone = int(request.form['update_skier_phone'])
+        except ValueError:
+            s_phone = "9999999999" # default value if input is not a valid integer
+        s_email = request.form['update_skier_email'][:255] # enforce varchar(255) limit on email input
         s_ability = request.form['update_skier_ability']
 
         # 3. Call the Stored Procedure using the project's parameter syntax
@@ -171,7 +181,7 @@ def update_skier():
             dbConnection.close()
 
 # #####################################################################
-# DELETE for Skiers
+# DELETE for Skiers adapted from build app.py starter with our own queries and form data.
 # #####################################################################
 
 @app.route("/skiers/delete", methods=["POST"])
@@ -245,7 +255,7 @@ def lifts():
             dbConnection.close()
 
 # #####################################################################
-# DELETE for Lifts
+# DELETE for Lifts adapted from starter.
 # #####################################################################
 @app.route("/lifts/delete", methods=["POST"])
 def delete_lifts():
@@ -282,7 +292,7 @@ def delete_lifts():
             dbConnection.close()
 
 # #####################################################################
-# UPDATE for Lifts
+# UPDATE for Lifts adapted from starter.
 # #####################################################################
 
 @app.route('/lifts/update', methods=['POST'])
@@ -324,11 +334,11 @@ def update_lifts():
 
 
 # --------------------------------------------------------------------------------------------------
-# SkiersLifts CRD
+# SkiersLifts CRD adapted from build app.py starter with our own queries and form data.
 # no need for update
-# --------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
 # #####################################################################
-# READ for SkiersLifts adapted from build app.py starter with our own queries.
+# READ for SkiersLifts adapted from starter with our own queries.
 # #####################################################################
 
 @app.route("/skierslifts", methods=["GET"])
@@ -489,7 +499,7 @@ def passes():
             dbConnection.close()
 
 # #####################################################################
-# CREATE for Passes
+# CREATE for Passes adapted from starter. Gemini helped us with queries so that we could remove expiration input.
 # #####################################################################
 @app.route("/passes/create", methods=["POST"])
 def create_passes():
@@ -523,7 +533,7 @@ def create_passes():
             dbConnection.close()
 
 # #####################################################################
-# DELETE for Passes
+# DELETE for Passes adapted from starter.
 # #####################################################################
 @app.route("/passes/delete", methods=["POST"])
 def delete_passes():
@@ -594,7 +604,7 @@ def rentalinventory():
             dbConnection.close()
 
 # #####################################################################
-# CREATE for RentalInventory items
+# CREATE for RentalInventory items adapted from starter with our own queries and form data.
 # #####################################################################
 @app.route("/rentalinventory/create", methods=["POST"])
 def create_rentalinventory():
@@ -603,19 +613,13 @@ def create_rentalinventory():
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        Type = request.form["create_rental_type"]
+        Type = request.form["create_rental_type"][:45] # enforce varchar(45) limit on type input
 
         # 1. Execute the procedure
-        cursor.execute("CALL sp_CreateRentalInventory(%s, @new_id);", (Type,))
-        
-        # 2. Skip the SP's internal result set (the SELECT ... AS p_new_id)
-        while cursor.nextset():
-            try:
-                cursor.fetchone()  # Attempt to fetch from the current result set
-            except:
-                pass  # If there's an error, it likely means there are no more result sets to process
+        query = "CALL sp_CreateRentalInventory(%s, @new_id);"
+        cursor.execute(query, (Type,))
 
-        # 3. Fetch the OUT parameter
+        # 2. Fetch the OUT parameter
         cursor.execute("SELECT @new_id;")
         row = cursor.fetchone()
         new_id = row[0] if row else None
@@ -721,7 +725,7 @@ def skiersrentals():
 
 
 # ########################################################################
-# CREATE for SkiersRentals
+# CREATE for SkiersRentals adapted from starter.
 # ########################################################################
 @app.route("/skiersrentals/create", methods=["POST"])
 def create_skiersrentals():
@@ -737,8 +741,9 @@ def create_skiersrentals():
         cursor.execute("CALL sp_CreateSkiersRentals(%s, %s, @sr_id);", (s_id, r_id))
         
         # Clear cursor to prevent "Commands out of sync" error
-        while cursor.nextset():
-            pass
+        cursor.execute("SELECT @sr_id;")
+        new_sr_id = cursor.fetchone()[0]
+        print(f"Created SkiersRentals with ID: {new_sr_id}")
 
         dbConnection.commit()
         return redirect("/skiersrentals")
@@ -931,7 +936,7 @@ def skierstrails():
             dbConnection.close()
 
 # #####################################################################
-# CREATE for Skierstrails
+# CREATE for Skierstrails adapted from starter. 
 # #####################################################################
 @app.route("/skierstrails/create", methods=["POST"])
 def create_skierstrails():
