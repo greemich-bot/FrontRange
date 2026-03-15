@@ -2,7 +2,7 @@
 # Most code is based on and adapted from the CS 340 starter code including:
 1. app routes and app.py
     adapted to fit our needs 
-2. tempates 
+2. templates 
     adapted to improve UX
 3. style.css
     copied
@@ -55,6 +55,18 @@ Links to an external site.
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 
+# Date: 3/11/26 
+       # Prompts used to debug logic for to delete skierslifts button error handling
+       # Provided gemini my roll back error handling results and asked it to show exist handler options. 
+4      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
+# Date: 3/12/26 
+4      # Prompts used to consult on the usage of cursor.nextset() in Trails
+       # Requested scenarios where the cursor moves the next result set.
+       # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
 # Date: 3/13/26 
        # Prompts used to add logic for to update rentals button
 4      # I provided my route and asked for an update form that only appears after the button is pressed and is automatically filled with the row ID 
@@ -67,5 +79,6 @@ Links to an external site.
        # Provided gemini my varchar limit and my current route, and asked it to show me how to slice an input that is too long. Implemented to safeguard invalid inputs on multiple routes. 
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
+
 
 

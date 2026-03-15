@@ -53,5 +53,30 @@
     </tbody>
 </table>
 
+<h2>Create a Trail</h2>
+<form class="cuForm" id="create_trail_form" method="POST" action="/trails/create">
+
+    <label for="create_trail_name"> Name: </label>
+    <input type="text" name="create_trail_name" id="create_trail_name" required>
+
+    <label for="create_trail_difficulty"> Difficulty: </label>
+    <select name="create_trail_difficulty" id="create_trail_difficulty" required>
+        <option value="" disabled selected>Select ability level</option>
+        <option value="Blue">Blue</option>
+        <option value="Green">Green</option>
+        <option value="Black">Black</option>
+    </select>
+
+    <label for="create_trail_trailLength"> TrailLength: </label>
+    <input type="text" name="create_trail_trailLength" id="create_trail_trailLength" required>
+
+    <label for="create_trail_status"> Status: </label>
+    <input type="text" name="create_trail_status" id="create_trail_status" required>
+    
+    </select>
+
+    <input type="submit">
+</form>
+
 
 {% endblock %}
