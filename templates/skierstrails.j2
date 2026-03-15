@@ -1,3 +1,4 @@
+{# adapted from starter code #}
 {% extends "main.j2" %}
 {% block content %}
 
@@ -36,5 +37,28 @@
     </tbody>
 </table>
 
+{# CREATE form #}
+<h2>Add a Skier Trail</h2>
+<form class="cuForm" id="add_skier_form" action="/skierstrails/create" method="POST">
+    
+    <label for="create_skier_skierId">Skier: </label>
+<select name="create_skier_skierId" id="create_skier_skierId" required>
+    <option value="" disabled selected>Select a Skier</option>
+    {% for skier in skiers %}
+    <option value="{{skier['SkierID']}}">{{skier['Name']}}</option>
+    {% endfor %}
+</select>
+
+<label for="create_trail_trailId">Trail: </label>
+<select name="create_trail_trailId" id="create_trail_trailId" required>
+    <option value="" disabled selected>Select a Trail</option>
+    {% for trail in trails %}
+    <option value="{{trail['TrailID']}}">{{trail['TrailName']}}</option>
+    {% endfor %}
+</select>
+
+
+    <input type="submit" value="Add Skier Trail">
+</form>
 
 {% endblock %}

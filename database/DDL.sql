@@ -1,3 +1,6 @@
+
+# Sp adapted from the example
+# Data definition file was exported from MySQL Workbench after creating the schema and tables, then edited to add the insert statements for sample data.
 DROP PROCEDURE IF EXISTS sp_load_front_range_data;
 DELIMITER //
 CREATE PROCEDURE sp_load_front_range_data()
@@ -163,7 +166,12 @@ ENGINE = InnoDB;
 INSERT INTO `Passes` (`Type`, `PurchaseDate`, `ExpirationDate`, `Skiers_SkierID`) VALUES
 ('Full Season', '2023-11-01 09:00:00', '2024-05-01 23:59:59', 1),
 ('Day Pass', '2024-02-03 08:30:00', '2024-02-03 16:00:00', 2),
-('3-Day Pass', '2024-02-04 12:00:00', '2024-02-06 16:00:00', 3);
+('3-Day Pass', '2024-02-04 12:00:00', '2024-02-06 16:00:00', 3),
+('Full Season', '2024-02-05 13:00:00', '2024-02-05 17:00:00', 4),
+('Full Season', '2023-11-15 10:00:00', '2024-05-01 23:59:59', 5),
+('Day Pass', '2024-02-06 09:30:00', '2024-02-06 16:00:00', 6),
+('3-Day Pass', '2024-02-07 12:00:00', '2024-02-09 16:00:00', 7),
+('Full Season', '2024-02-08 13:00:00', '2024-02-08 17:00:00', 8);
 
 
 -- -----------------------------------------------------
@@ -218,25 +226,6 @@ INSERT INTO `SkiersRentals` (`Skiers_SkierID`, `RentalInventory_RentalID`) VALUE
 (5, 3),
 (6, 2),
 (7, 1);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

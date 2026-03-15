@@ -1,7 +1,8 @@
 # ########################################
 # ########## SETUP
 
-
+# This file contains all of the route handlers for our Flask application. Most of the routes were adapted from the starter code examples in the exploration.
+# The setup was also adapted from the starter code.
 
 from flask import Flask, render_template, request, redirect
 import database.db_connector as db
@@ -13,7 +14,7 @@ app = Flask(__name__)
 # ########################################
 # ########## ROUTE HANDLERS
 
-# READ ROUTES
+# READ ROUTES adapted from build app.py starter.
 @app.route("/", methods=["GET"])
 def home():
     try:
@@ -25,7 +26,7 @@ def home():
 
 
 # -----------------------------------------------------------------------------------------
-# Reset Route
+# Reset Route - Implemented with the PL wrapper and adapted from the example in class.
 # -----------------------------------------------------------------------------------------
 @app.route("/reset-db", methods=["POST"])
 def reset_database():
@@ -33,7 +34,7 @@ def reset_database():
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        # Call your reset procedure
+        # Call reset procedure
         cursor.execute("CALL sp_load_front_range_data();")
         while cursor.nextset():
             pass
@@ -54,14 +55,16 @@ def reset_database():
 # ---------------------------------------------------------------------------------------------------------
 # Skiers CRUD routes
 # ---------------------------------------------------------------------------------------------------------
+# #####################################################################
+# READ for Skiers adapted from build app.py starter.
+# #####################################################################
 @app.route("/skiers", methods=["GET"])
 def skiers():
     try:
         dbConnection = db.connectDB()  # Open our database connection
 
         # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
+       
         query1 = "SELECT * FROM Skiers;"
         
         skiers = db.query(dbConnection, query1).fetchall()
@@ -81,7 +84,10 @@ def skiers():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# create skier
+# #####################################################################
+# CREATE for Skiers adapted from build app.py starter with our own queries and form data.
+# gemini helped us with slicing our name to enforce Varchar(45)
+# #####################################################################
 
 @app.route("/skiers/create", methods=["POST"])
 def create_skiers():
@@ -89,21 +95,27 @@ def create_skiers():
         dbConnection = db.connectDB() # this opens skiers db connection
         cursor = dbConnection.cursor()
 
-        # Get form data. will do data cleansing try/catch blocks later since we don't have int input for the following attributes:
-        Name = request.form["create_skier_name"]
+        # Get form data. 
+        
+        Name = request.form["create_skier_name"][:45] # this is a way to enforce the varchar(45) limit on the input. it will raise an error if the input exceeds 45 characters.
+
         Address = request.form["create_skier_address"]
-        Phone = request.form["create_skier_phone"]
-        Email = request.form["create_skier_email"]
+        try:
+            Phone = int(request.form["create_skier_phone"])
+        except ValueError:
+           Phone = "9999999999" # default value if input is not a valid integer
+
+        Email = request.form["create_skier_email"][:255] # enforce varchar(255) limit on email input
         Ability = request.form["create_skier_ability"]
 
         # call create skier sp method. use parameterized queries to prevent injuection attacks like drop table or db.
         query1 = "CALL sp_CreateSkier(%s, %s, %s, %s, %s, @s_new_id);"
         cursor.execute(query1, (Name, Address, Phone, Email, Ability))
         cursor.nextset()
-        # store the generated skier id for the last inserted row. this will be the pk for the new inserted row
+        # store the generated skier id for the last inserted row
         cursor.execute("SELECT @new_id;")
-        new_id = cursor.fetchone()[0] # id is index 0 of the row
-        # cursor.nextset() # Move the the next result. Assuming this to move to the next row?
+        new_id = cursor.fetchone()[0] 
+        
         dbConnection.commit() #commit transaction
         print(f"""Create skiers. 
         ID: {new_id} 
@@ -116,31 +128,35 @@ def create_skiers():
         # Redirect to the updated webpage by add the path /skiers
         return redirect("/skiers")
     except Exception as e:
-        print(f"Error executing quereis: {e}")
+        print(f"Error executing queries: {e}")
         return ("An error occurred while executing skiers/create this database queries. ", 500,) # ProgError, OpsError, DBError? can be more specific
     finally:
         # Close the DB Conneciton, if it exists:
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+# #####################################################################
+# UPDATE for Skiers adapted from starter and applied some parameters 
+# #####################################################################
+
 @app.route('/skiers/update', methods=['POST'])
 def update_skier():
     try:
-        # 1. Connect to the DB and create a cursor
+        
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        # 2. Capture data from form 'name' attributes
-        # Ensure these keys match the 'name' attributes in your skiers.j2 file
+        
         s_id = request.form['update_skier_id']
-        s_name = request.form['update_skier_name']
+        s_name = request.form['update_skier_name'] [:45] # enforce varchar(45) limit on name input
         s_address = request.form['update_skier_address']
-        s_phone = request.form['update_skier_phone']
-        s_email = request.form['update_skier_email']
+        try:
+            s_phone = int(request.form['update_skier_phone'])
+        except ValueError:
+            s_phone = "9999999999" # default value if input is not a valid integer
+        s_email = request.form['update_skier_email'][:255] # enforce varchar(255) limit on email input
         s_ability = request.form['update_skier_ability']
 
-        # 3. Call the Stored Procedure using the project's parameter syntax
-        # Order: s_id, s_name, s_address, s_phone, s_email, s_ability
         query = "CALL sp_UpdateSkier(%s, %s, %s, %s, %s, %s);"
         params = (s_id, s_name, s_address, s_phone, s_email, s_ability)
         
@@ -149,7 +165,6 @@ def update_skier():
         
         print(f"UPDATE skier successful. ID: {s_id}")
 
-        # 4. Redirect back to the skiers table
         return redirect("/skiers")
 
     except Exception as e:
@@ -157,46 +172,14 @@ def update_skier():
         return "An error occurred while updating the skier.", 500
 
     finally:
-        # 5. Clean up connection
+        
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+# #####################################################################
+# DELETE for Skiers adapted from build app.py starter with our own queries and form data.
+# #####################################################################
 
-# delete pass
-@app.route("/passes/delete", methods=["POST"])
-def delete_passes():
-    try:
-        dbConnection = db.connectDB()  # Open our database connection
-        cursor = dbConnection.cursor()
-
-        # Get form data
-        pass_id = request.form["delete_pass_id"]
-
-        # Create and execute our queries
-        # Using parameterized queries (Prevents SQL injection attacks)
-        query1 = "CALL sp_DeletePass(%s);"
-        cursor.execute(query1, (pass_id,))
-
-        dbConnection.commit()  # commit the transaction
-
-        print(f"DELETE pass. ID: {pass_id} Name: {pass_id}")
-
-        # Redirect the user to the updated webpage
-        return redirect("/passes")
-
-    except Exception as e:
-        print(f"Error executing queries: {e}")
-        return (
-            "An error occurred while executing the database queries.",
-            500,
-        )
-
-    finally:
-        # Close the DB connection, if it exists
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
-
-# delete skier
 @app.route("/skiers/delete", methods=["POST"])
 def delete_skiers():
     try:
@@ -205,13 +188,10 @@ def delete_skiers():
 
         # Get form data
         skier_id = request.form["delete_skier_id"]
-        
 
         # Create and execute our queries
-        # Using parameterized queries (Prevents SQL injection attacks)
         query1 = "CALL sp_DeleteSkier(%s);"
         cursor.execute(query1, (skier_id,))
-
         dbConnection.commit()  # commit the transaction
 
         print(f"DELETE skiers. ID: {skier_id}")
@@ -231,8 +211,38 @@ def delete_skiers():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
+# ---------------------------------------------------------------------------------------------------------
+# Lifts CRUD routes
+# ---------------------------------------------------------------------------------------------------------
+# #####################################################################
+# READ for Lifts adapted from build app.py starter.
+# #####################################################################
 
-# delete Lifts
+@app.route("/lifts", methods=["GET"])
+def lifts():
+    try:
+        dbConnection = db.connectDB()  # Open our database connection
+
+        # Create and execute our queries
+        query1 = "SELECT * FROM Lifts;"
+        lifts = db.query(dbConnection, query1).fetchall()
+        # render 
+        return render_template(
+            "lifts.j2", lifts=lifts      
+        )
+    
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return "An error occurred while executing the database queries.", 500
+
+    finally:
+        # Close the DB connection, if it exists
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+# #####################################################################
+# DELETE for Lifts adapted from starter.
+# #####################################################################
 @app.route("/lifts/delete", methods=["POST"])
 def delete_lifts():
     try:
@@ -242,12 +252,9 @@ def delete_lifts():
         # Get form data
         lift_id = request.form["delete_lift_id"]
         
-
         # Create and execute our queries
-        # Using parameterized queries (Prevents SQL injection attacks)
         query1 = "CALL sp_DeleteLifts(%s);"
         cursor.execute(query1, (lift_id,))
-
         dbConnection.commit()  # commit the transaction
 
         print(f"DELETE lifts. ID: {lift_id}")
@@ -267,22 +274,20 @@ def delete_lifts():
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# Lifts update
+# #####################################################################
+# UPDATE for Lifts adapted from starter.
+# #####################################################################
 
 @app.route('/lifts/update', methods=['POST'])
 def update_lifts():
     try:
-        # 1. Connect to the DB and create a cursor
+        
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        # 2. Capture data from form 'name' attributes
-        # Ensure these keys match the 'name' attributes in your skiers.j2 file
         l_id = request.form['update_lift_id']
         l_status = request.form['update_lift_status']
 
-        # 3. Call the Stored Procedure using the project's parameter syntax
-        # Order: s_id, s_name, s_address, s_phone, s_email, s_ability
         query = "CALL sp_UpdateLifts(%s, %s);"
         params = (l_id, l_status)
         
@@ -291,64 +296,33 @@ def update_lifts():
         
         print(f"UPDATE lifts successful. ID: {l_id}")
 
-        # 4. Redirect back to the skiers table
         return redirect("/lifts")
 
     except Exception as e:
-        print(f"Error updating skier: {e}")
+        print(f"Error updating lifts: {e}")
         return "An error occurred while updating the lifts.", 500
 
     finally:
-        # 5. Clean up connection
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# -------------------------------------------------------------------------------------------------
-# Lifts RU
-# only need read and update
-# -------------------------------------------------------------------------------------------------
 
-@app.route("/lifts", methods=["GET"])
-def lifts():
-    try:
-        dbConnection = db.connectDB()  # Open our database connection
 
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
-        query1 = "SELECT * FROM Lifts;"
-        
-        lifts = db.query(dbConnection, query1).fetchall()
 
-        # Render the lifts.j2 file, and also send the renderer
-        # a couple objects that contains lifts information
-        return render_template(
-            "lifts.j2", lifts=lifts      
-        )
-
-    except Exception as e:
-        print(f"Error executing queries: {e}")
-        return "An error occurred while executing the database queries.", 500
-
-    finally:
-        # Close the DB connection, if it exists
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
 
 # --------------------------------------------------------------------------------------------------
-# SkiersLifts CRD
+# SkiersLifts CRD adapted from build app.py starter with our own queries and form data.
 # no need for update
-# --------------------------------------------------------------------------------------------------
-
+# -------------------------------------------------------------------------------------------------
+# #####################################################################
+# READ for SkiersLifts adapted from starter with our own queries.
+# #####################################################################
 
 @app.route("/skierslifts", methods=["GET"])
 def skierslifts():
     try:
         dbConnection = db.connectDB()  # Open our database connection
 
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
         query1 = """
             SELECT 
                 SkiersLifts.SkiersLiftsID, 
@@ -367,8 +341,6 @@ def skierslifts():
         query3 = "SELECT LiftID, LiftName FROM Lifts;"
         lifts = db.query(dbConnection, query3).fetchall()
 
-        # Render the lifts.j2 file, and also send the renderer
-        # a couple objects that contains lifts information
         return render_template(
             "skierslifts.j2", skierslifts=skierslifts, skiers=skiers, lifts=lifts
         )
@@ -378,11 +350,12 @@ def skierslifts():
         return "An error occurred while executing the database queries.", 500
 
     finally:
-        # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# create skierslifts
+# #####################################################################
+# CREATE for SkiersLifts adapted from starter with our own queries and form data.
+# #####################################################################
 @app.route("/skierslifts/create", methods=["POST"])
 def create_skierslifts():
     try:
@@ -401,7 +374,6 @@ def create_skierslifts():
 
         cursor.execute("SELECT @new_id;")
         new_id = cursor.fetchone()[0]
-
         dbConnection.commit()
 
         return redirect("/skierslifts")
@@ -414,27 +386,24 @@ def create_skierslifts():
         if "dbConnection" in locals():
             dbConnection.close()
 
-# delete skierslifts
+# #####################################################################
+# DELETE for SkiersLifts adapted from starter with our own queries and form data.
+# #####################################################################
 @app.route("/skierslifts/delete", methods=["POST"])
 def delete_skierslifts():
     try:
-        dbConnection = db.connectDB()  # Open our database connection
+        dbConnection = db.connectDB()  
         cursor = dbConnection.cursor()
 
-        # Get form data
         skierslifts_id = request.form["delete_skierslifts_id"]
         
-
-        # Create and execute our queries
-        # Using parameterized queries (Prevents SQL injection attacks)
         query1 = "CALL sp_DeleteSkiersLifts(%s);"
         cursor.execute(query1, (skierslifts_id,))
 
-        dbConnection.commit()  # commit the transaction
+        dbConnection.commit() 
 
         print(f"DELETE skierslifts. ID: {skierslifts_id}")
 
-        # Redirect the user to the updated webpage
         return redirect("/skierslifts")
 
     except Exception as e:
@@ -445,38 +414,21 @@ def delete_skierslifts():
         )
 
     finally:
-        # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
 
 
 
-################ delete skierstrails ###########
-@app.route("/skierstrails/delete", methods=["POST"])
-def delete_skierstrails():
-    try:
-        dbConnection = db.connectDB()
-        cursor = dbConnection.cursor()
 
-        st_id = request.form["delete_skierstrails_id"]
-
-        cursor.execute("CALL sp_DeleteSkiersTrails(%s);", (st_id,))
-        dbConnection.commit()
-
-        print(f"DELETE skierstrails. ID: {st_id}")
-
-        return redirect("/skierstrails")
-
-    finally:
-        if "dbConnection" in locals() and dbConnection:
-            dbConnection.close()
 # --------------------------------------------------------------------------------------------------
 # Passes CRD
 # only need Create, Read, and Delete
 # --------------------------------------------------------------------------------------------------
 
-
+# #####################################################################
+# READ for Passes adapted from build app.py starter with our own queries.
+# #####################################################################
 
 @app.route("/passes", methods=["GET"])
 def passes():
@@ -490,8 +442,8 @@ def passes():
         DATE(ExpirationDate) AS ExpirationDate, 
         Skiers_SkierID,
         Skiers.Name AS SkierName 
-    FROM Passes 
-    INNER JOIN Skiers ON Passes.Skiers_SkierID = Skiers.SkierID;  
+        FROM Passes 
+        INNER JOIN Skiers ON Passes.Skiers_SkierID = Skiers.SkierID;  
         """
 
         
@@ -510,25 +462,24 @@ def passes():
         if "dbConnection" in locals():
             dbConnection.close()
 
-# create pass
+# #####################################################################
+# CREATE for Passes adapted from starter. Gemini helped us with queries so that we could remove expiration input.
+# #####################################################################
 @app.route("/passes/create", methods=["POST"])
 def create_passes():
     try:
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        # 1. Collect only the essential info
         p_type = request.form["create_pass_type"]
         p_purchase_date = request.form["create_purchase_date"].replace("T"," ") + ":00"
         skier_id = int(request.form["create_skier_skierId"])
 
-        # 2. Call procedure (Notice only 3 input params now + the OUT param)
         cursor.execute(
             "CALL sp_CreatePass(%s, %s, %s, @new_id);",
             (p_type, p_purchase_date, skier_id)
         )
 
-        # 3. Get the ID generated by the DB
         cursor.execute("SELECT @new_id;")
         new_id = cursor.fetchone()[0]
 
@@ -542,25 +493,54 @@ def create_passes():
         if "dbConnection" in locals():
             dbConnection.close()
 
+# #####################################################################
+# DELETE for Passes adapted from starter.
+# #####################################################################
+@app.route("/passes/delete", methods=["POST"])
+def delete_passes():
+    try:
+        dbConnection = db.connectDB()  
+        cursor = dbConnection.cursor()
+
+        pass_id = request.form["delete_pass_id"]
+
+        query1 = "CALL sp_DeletePass(%s);"
+        cursor.execute(query1, (pass_id,))
+
+        dbConnection.commit() 
+
+        print(f"DELETE pass. ID: {pass_id} Name: {pass_id}")
+
+        return redirect("/passes")
+
+    except Exception as e:
+        print(f"Error executing queries: {e}")
+        return (
+            "An error occurred while executing the database queries.",
+            500,
+        )
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
 
 # --------------------------------------------------------------------------------------------------
 # RentalInventory CRD
 # only need Create, Read, and Delete
-# --------------------------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------------------
+# #####################################################################
+# READ for RentalInventory adapted from build app.py starter with our own queries.
+# #####################################################################
 @app.route("/rentalinventory", methods=["GET"])
 def rentalinventory():
     try:
-        dbConnection = db.connectDB()  # Open our database connection
+        dbConnection = db.connectDB()  
 
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
         query1 = "SELECT * FROM RentalInventory;"
         
         rentalinventory = db.query(dbConnection, query1).fetchall()
 
-        # Render the rentalinventory.j2 file, and also send the renderer
-        # a couple objects that contains rentalinventory information
         return render_template(
             "rentalinventory.j2", rentalinventory=rentalinventory      
         )
@@ -570,11 +550,12 @@ def rentalinventory():
         return "An error occurred while executing the database queries.", 500
 
     finally:
-        # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# create rental inventory item
+# #####################################################################
+# CREATE for RentalInventory items adapted from starter with our own queries and form data.
+# #####################################################################
 @app.route("/rentalinventory/create", methods=["POST"])
 def create_rentalinventory():
     dbConnection = None
@@ -582,19 +563,11 @@ def create_rentalinventory():
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        Type = request.form["create_rental_type"]
+        Type = request.form["create_rental_type"][:45] # enforce varchar(45) limit on type input
 
-        # 1. Execute the procedure
-        cursor.execute("CALL sp_CreateRentalInventory(%s, @new_id);", (Type,))
-        
-        # 2. Skip the SP's internal result set (the SELECT ... AS p_new_id)
-        while cursor.nextset():
-            try:
-                cursor.fetchone()  # Attempt to fetch from the current result set
-            except:
-                pass  # If there's an error, it likely means there are no more result sets to process
+        query = "CALL sp_CreateRentalInventory(%s, @new_id);"
+        cursor.execute(query, (Type,))
 
-        # 3. Fetch the OUT parameter
         cursor.execute("SELECT @new_id;")
         row = cursor.fetchone()
         new_id = row[0] if row else None
@@ -606,34 +579,33 @@ def create_rentalinventory():
 
     except Exception as e:
         if dbConnection:
-            dbConnection.rollback() # Important for data integrity
+            dbConnection.rollback() 
         print(f"Error: {e}")
         return "An error occurred during creation.", 500
     finally:
         if dbConnection:
-            cursor.close() # Clean up the cursor too
+            cursor.close()
             dbConnection.close()
+
+# #####################################################################
+# Delete for RentalInventory adapted from starter with our own queries and form data.
+# #####################################################################
 
 @app.route("/rentalinventory/delete", methods=["POST"])
 def delete_rentalinventory():
     try:
-        dbConnection = db.connectDB()  # Open our database connection
+        dbConnection = db.connectDB()  
         cursor = dbConnection.cursor()
 
-        # Get form data
         rental_id = request.form["delete_rental_id"]
         
-
-        # Create and execute our queries
-        # Using parameterized queries (Prevents SQL injection attacks)
         query1 = "CALL sp_DeleteRentalInventory(%s);"
         cursor.execute(query1, (rental_id,))
 
-        dbConnection.commit()  # commit the transaction
+        dbConnection.commit()  
 
         print(f"DELETE rental inventory item. ID: {rental_id}")
 
-        # Redirect the user to the updated webpage
         return redirect("/rentalinventory")
 
     except Exception as e:
@@ -644,7 +616,6 @@ def delete_rentalinventory():
         )
 
     finally:
-        # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
@@ -694,13 +665,18 @@ def create_trails():
 # --------------------------------------------------------------------------------------------------
 # SkiersRentals CRUD
 # --------------------------------------------------------------------------------------------------
+
+# ########################################################################
+# READ for SkiersRentals adapted from build app.py starter with queries that were provided by Gemini
+# that helped us with our first iteration of the update button and were functional after implementing the SP.
+# #######################################################################
+
 @app.route("/skiersrentals", methods=["GET"])
 def skiersrentals():
     dbConnection = None
     try:
         dbConnection = db.connectDB()
-        
-        # 1. Standard queries for the table and dropdowns
+ 
         query_main = """
             SELECT SkiersRentals.SkiersRentalsID, Skiers.Name AS SkierName, RentalInventory.Type AS ItemType 
             FROM SkiersRentals 
@@ -711,12 +687,10 @@ def skiersrentals():
         skiers_list = db.query(dbConnection, "SELECT SkierID, Name FROM Skiers;").fetchall()
         items_list = db.query(dbConnection, "SELECT RentalID, Type FROM RentalInventory;").fetchall()
         
-        # 2. Check if a specific ID was passed for updating (e.g., /skiersrentals?id=5)
         rental_to_update = None
         target_id = request.args.get('id')
         
         if target_id:
-            # Fetch the specific record to pre-fill the update form
             query_single = "SELECT * FROM SkiersRentals WHERE SkiersRentalsID = %s;"
             rental_to_update = db.query(dbConnection, query_single, (target_id,)).fetchone()
 
@@ -724,13 +698,15 @@ def skiersrentals():
                                skiersrentals=results, 
                                skiers=skiers_list, 
                                rentals=items_list,
-                               rental=rental_to_update) # This prevents the 'undefined' error
+                               rental=rental_to_update) 
     finally:
         if dbConnection:
             dbConnection.close()
 
 
-# --- CREATE ROUTE ---
+# ########################################################################
+# CREATE for SkiersRentals adapted from starter.
+# ########################################################################
 @app.route("/skiersrentals/create", methods=["POST"])
 def create_skiersrentals():
     dbConnection = None
@@ -741,12 +717,11 @@ def create_skiersrentals():
         s_id = request.form["create_skier_skierId"]
         r_id = request.form["create_rental_rentalId"]
 
-        # Call procedure with OUT parameter
         cursor.execute("CALL sp_CreateSkiersRentals(%s, %s, @sr_id);", (s_id, r_id))
         
-        # Clear cursor to prevent "Commands out of sync" error
-        while cursor.nextset():
-            pass
+        cursor.execute("SELECT @sr_id;")
+        new_sr_id = cursor.fetchone()[0]
+        print(f"Created SkiersRentals with ID: {new_sr_id}")
 
         dbConnection.commit()
         return redirect("/skiersrentals")
@@ -757,7 +732,9 @@ def create_skiersrentals():
         if dbConnection:
             dbConnection.close()
 
-
+# ########################################################################
+# UPDATE for SkiersRentals adapted from starter, improved with gemini suggestions after implementing the appearing button. 
+# ########################################################################
 @app.route("/skiersrentals/update", methods=["POST"])
 def update_skiersrentals():
     dbConnection = None
@@ -765,19 +742,15 @@ def update_skiersrentals():
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        # 1. Capture the IDs from the form
-        # 'update_rental_id' is usually a hidden input in your edit form
         rental_id = request.form["update_rental_id"]
         skier_id = request.form["update_skier_id"]
         item_id = request.form["update_item_id"]
 
-        # 2. Call the Update Stored Procedure
         cursor.execute(
             "CALL sp_UpdateSkiersRentals(%s, %s, %s);", 
             (rental_id, skier_id, item_id)
         )
         
-        # Clear cursor and commit
         while cursor.nextset():
             pass
         dbConnection.commit()
@@ -794,10 +767,9 @@ def update_skiersrentals():
             dbConnection.close()
 
 
-
-
-
-################ delete skiersrentals ###########
+# ########################################################################
+# DELETE for SkiersRentals adapted from starter with our own queries and form data.
+# ########################################################################
 @app.route("/skiersrentals/delete", methods=["POST"])
 def delete_skiersrentals():
     try:
@@ -819,23 +791,20 @@ def delete_skiersrentals():
 
 
 # --------------------------------------------------------------------------------------------------
-# SkiersTrails RU 
-# only need read and update
+# Trails 
 # --------------------------------------------------------------------------------------------------
+# #####################################################################
+# Read for Trails adapted from build app.py starter with our own queries.
+# #####################################################################
 @app.route("/trails", methods=["GET"])
 def trails():
     try:
         dbConnection = db.connectDB()  # Open our database connection
 
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
         query1 = "SELECT * FROM Trails;"
         
         trails = db.query(dbConnection, query1).fetchall()
 
-        # Render the trails.j2 file, and also send the renderer
-        # a couple objects that contains trails information
         return render_template(
             "trails.j2", trails=trails      
         )
@@ -845,24 +814,22 @@ def trails():
         return "An error occurred while executing the database queries.", 500
 
     finally:
-        # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
+
+# #####################################################################
+# UPDATE for Trails adapted from starter with our own queries and form data.
+# #####################################################################
 
 @app.route('/trails/update', methods=['POST'])
 def update_trails():
     try:
-        # 1. Connect to the DB and create a cursor
         dbConnection = db.connectDB()
         cursor = dbConnection.cursor()
 
-        # 2. Capture data from form 'name' attributes
-        # Ensure these keys match the 'name' attributes in your skiers.j2 file
         t_id = request.form['update_trail_id']
         t_status = request.form['update_trail_status']
 
-        # 3. Call the Stored Procedure using the project's parameter syntax
-        # Order: s_id, s_name, s_address, s_phone, s_email, s_ability
         query = "CALL sp_UpdateTrails(%s, %s);"
         params = (t_id, t_status)
         
@@ -871,7 +838,6 @@ def update_trails():
         
         print(f"UPDATE trails successful. ID: {t_id}")
 
-        # 4. Redirect back to the skiers table
         return redirect("/trails")
 
     except Exception as e:
@@ -879,7 +845,6 @@ def update_trails():
         return "An error occurred while updating the trails.", 500
 
     finally:
-        # 5. Clean up connection
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
@@ -887,14 +852,14 @@ def update_trails():
 # Skierstrails CRD
 # only need read, update, and delete
 # --------------------------------------------------------------------------------------------------
+# #####################################################################
+# READ for Skierstrails adapted from build app.py starter 
+# #####################################################################
 @app.route("/skierstrails", methods=["GET"])
 def skierstrails():
     try:
-        dbConnection = db.connectDB()  # Open our database connection
+        dbConnection = db.connectDB()  
 
-        # Create and execute our queries
-        # In query1, we use a JOIN clause to display the names of the homeworlds,
-        #       instead of just ID values
         query1 = """
             SELECT 
                 SkiersTrails.SkiersTrailsID, 
@@ -907,10 +872,14 @@ def skierstrails():
         
         skierstrails = db.query(dbConnection, query1).fetchall()
 
-        # Render the skierstrails.j2 file, and also send the renderer
-        # a couple objects that contains skierstrails information
+        query2 = "SELECT SkierID, Name FROM Skiers;"
+        skiers = db.query(dbConnection, query2).fetchall()  
+
+        query3 = "SELECT TrailID, TrailName FROM Trails;"
+        trails = db.query(dbConnection, query3).fetchall()
+
         return render_template(
-            "skierstrails.j2", skierstrails=skierstrails      
+            "skierstrails.j2", skierstrails=skierstrails, skiers=skiers, trails=trails
         )
 
     except Exception as e:
@@ -918,11 +887,65 @@ def skierstrails():
         return "An error occurred while executing the database queries.", 500
 
     finally:
-        # Close the DB connection, if it exists
         if "dbConnection" in locals() and dbConnection:
             dbConnection.close()
 
-# ########################################
+# #####################################################################
+# CREATE for Skierstrails adapted from starter. 
+# #####################################################################
+@app.route("/skierstrails/create", methods=["POST"])
+def create_skierstrails():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        Skiers_SkierID = int(request.form["create_skier_skierId"])
+        Trails_TrailID = int(request.form["create_trail_trailId"])
+
+        cursor.execute(
+            "CALL sp_CreateSkiersTrails(%s,%s,@new_id);",
+            (Skiers_SkierID, Trails_TrailID)
+        )
+
+        cursor.nextset()
+        cursor.execute("SELECT @new_id;")
+        new_id = cursor.fetchone()[0]
+
+        dbConnection.commit()
+
+        return redirect("/skierstrails")
+
+    except Exception as e:
+        print("REAL ERROR:", e)
+        return ("Create skierstrails failed", 500)
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+# #####################################################################
+# DELETE for Skierstrails adapted from starter with our own queries and form data.
+# #####################################################################
+@app.route("/skierstrails/delete", methods=["POST"])
+def delete_skierstrails():
+    try:
+        dbConnection = db.connectDB()
+        cursor = dbConnection.cursor()
+
+        st_id = request.form["delete_skierstrails_id"]
+
+        cursor.execute("CALL sp_DeleteSkiersTrails(%s);", (st_id,))
+        dbConnection.commit()
+
+        print(f"DELETE skierstrails. ID: {st_id}")
+
+        return redirect("/skierstrails")
+
+    finally:
+        if "dbConnection" in locals() and dbConnection:
+            dbConnection.close()
+
+# ########################################################################
 # ########## LISTENER
 
 if __name__ == "__main__":
