@@ -55,8 +55,8 @@ Links to an external site.
 Links to an external site. 
 
 # Date: 3/13/26 
-       # Prompts used to add logic for to update rentals button
-       # Provided gemini my varchar limit and my current route, and asked it to show me how to slice an input that is too long. Implemented to safeguard invalid inputs. 
+       # Prompts used to limit input on skiers button
+       # Provided gemini my varchar limit and my current route, and asked it to show me how to slice an input that is too long. Implemented to safeguard invalid inputs on multiple routes. 
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 
