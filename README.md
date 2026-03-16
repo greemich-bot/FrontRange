@@ -4,9 +4,7 @@
     adapted to fit our needs 
 2. tempates 
     adapted to improve UX
-3. style.css
-    copied
-4. Stored Procedures to handle CRUD
+3. Stored Procedures to handle CRUD
     adapted to fit our needs
 
 # Citation for use of AI Tools:
@@ -65,6 +63,12 @@ Links to an external site.
 # Date: 3/13/26 
        # Prompts used to limit input on skiers button
        # Provided gemini my varchar limit and my current route, and asked it to show me how to slice an input that is too long. Implemented to safeguard invalid inputs on multiple routes. 
+7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
+# Date: 3/15/26 
+       # Prompts used to style .css
+       # Asked Gemini for a modern mountain theme for my Ski resort with appropriate colors. I applied the changes and tested manually making changes so that everything looked consistent, often making tweaks to the templates as well. I then copied and pasted my .css back into gemini because I couldn't figure out how to make my "edit skier" form fit in the table. Gemini output the final result which is used for submission.
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 

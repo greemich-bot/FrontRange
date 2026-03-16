@@ -1,6 +1,6 @@
 
 # Sp adapted from the example
-# Data definition file was exported from MySQL Workbench after creating the schema and tables, then edited to add the insert statements for sample data.
+# Data definition file was originally exported from MySQL Workbench after creating the schema and tables, then modified and edited to add the insert statements for sample data.
 DROP PROCEDURE IF EXISTS sp_load_front_range_data;
 DELIMITER //
 CREATE PROCEDURE sp_load_front_range_data()

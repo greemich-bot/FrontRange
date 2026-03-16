@@ -9,10 +9,12 @@
     <thead>
         {# For the table header row, we print the DB attribute names #}
         <tr>
-            {% for key in trails[0].keys() %}
-            <th>{{ key }}</th>
-            {% endfor %}
-            <th></th>
+            <th>TrailID</th>
+            <th>Trail Name</th>
+            <th>Difficulty</th>
+            <th>Trail Length</th>
+            <th>Status</th>
+            <th>Update Trail Status</th>
         </tr>
     </thead>
 

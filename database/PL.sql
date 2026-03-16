@@ -252,9 +252,8 @@ BEGIN
     insert INTO SkiersLifts(Skiers_SkierID, Lifts_LiftID)
     VALUES (sl_skierID, sl_liftID);
 
-    -- This stores the value in your OUT parameter
+    
     SELECT LAST_INSERT_ID() INTO sl_id;
-    -- then display id of the last inserted row
     SELECT LAST_INSERT_ID() AS 'sl_new_id';
 END //
 DELIMITER ;

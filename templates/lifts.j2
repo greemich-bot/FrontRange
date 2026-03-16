@@ -9,11 +9,15 @@
     <thead>
         {# For the table header row, we print the DB attribute names #}
         <tr>
-            {% for key in lifts[0].keys() %}
-            <th>{{ key }}</th>
-            {% endfor %}
+            <th>LiftID</th>
+            <th>Lift Number</th>
+            <th>Lift Name</th>
+            <th>Travel Time</th>
+            <th>Chair Capacity</th>
+            <th>Status</th>
+            <th>Altitude</th>
             <th>Delete Lift</th>
-            <th>Edit Lift</th>
+            <th>Update Lift Status</th>
         </tr>
     </thead>
 

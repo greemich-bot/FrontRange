@@ -9,10 +9,9 @@
     <thead>
         {# For the table header row, we print the DB attribute names #}
         <tr>
-            {% for key in rentalinventory[0].keys() %}
-            <th>{{ key }}</th>
-            {% endfor %}
-            <th></th>
+            <th>RentalID</th>
+            <th>Type</th>
+            <th>Delete</th>
         </tr>
     </thead>
 
@@ -40,7 +39,7 @@
 </table>
 
 <h2>Add New Rental Item</h2>
-<form id="create_rental_form" method="POST" action="/rentalinventory/create">
+<form class="cuForm" id="create_rental_form" method="POST" action="/rentalinventory/create">
     <label for="rental_type">Type:</label>
     <input type="text" id="rental_type" name="create_rental_type" required>
     <button type="submit">Add</button>

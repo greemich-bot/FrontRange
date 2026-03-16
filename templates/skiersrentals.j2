@@ -46,7 +46,7 @@
 
 {% if rental %}
 <h2>Update Rental #{{ rental.SkiersRentalsID or rental[0] }}</h2>
-    <form action="/skiersrentals/update" method="POST">
+    <form class="cuForm"action="/skiersrentals/update" method="POST">
         <!-- Hidden PK so the SP knows which row to change -->
         <input type="hidden" name="update_rental_id" value="{{ rental.SkiersRentalsID or rental[0] }}">
 
@@ -92,7 +92,7 @@
 
     <label for="create_rental_rentalId">Rental Item: </label>
     <select name="create_rental_rentalId" id="create_rental_rentalId" required>
-        <option value="" disabled selected>Select a Rental Item</option>
+        <option value="" disabled selected>Select Item</option>
         {% for r in rentals %}
         <option value="{{ r.RentalID or r['RentalID'] }}">{{ r.Type or r['Type'] }}</option>
         {% endfor %}
