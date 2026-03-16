@@ -1,7 +1,7 @@
 # ########################################
 # ########## SETUP
 
-# This file contains all of the route handlers for our Flask application. Most of the routes were adapted from the starter code examples in the exploration.
+# This file contains all of the route handlers for our Flask application. Most of the routes were adapted from the starter code examples in the exploration unless otherwise noted above each definition.
 # The setup was also adapted from the starter code.
 
 from flask import Flask, render_template, request, redirect

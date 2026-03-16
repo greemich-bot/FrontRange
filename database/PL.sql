@@ -1,5 +1,5 @@
 
-
+# Originality Statement: unless otherwise stated, this code is all adapted from started code provided
 # ------------------------------------------------------------------
 # Skier Page PL/SQL
 # ------------------------------------------------------------------
