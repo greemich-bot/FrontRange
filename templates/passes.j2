@@ -33,7 +33,7 @@
             <td>
                 <form class="cuForm" id="delete_pass_form_{{ pass.PassID }}" method="POST" action="/passes/delete">
                     <input type="hidden" name="delete_pass_id" value="{{ pass.PassID }}">
-                    <input type="submit" value="Delete">
+                    <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this pass?')">
                 </form>
             </td>
 

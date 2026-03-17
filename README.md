@@ -9,6 +9,10 @@
 
 # Citation for use of AI Tools:
 
+# Date 1/13/2026
+       # Chat GPT prompted repetitively to generate a ski map based on some size parameters. Eventually it was asked to remove all key features because they didn't make sense, and we added things like names and difficulty in after the fact.
+       # AI Source URL: https://chat.openai.com.2026
+
 # Date: 3/01/2026
 3      # Prompts used to create a button that opens a form to edit skiers
 4      # Help me add a button that shows a form to edit a skier row.

@@ -42,7 +42,7 @@
             <td>
             <form class="cuForm" id="delete_lift_form_{{ lift.LiftID }}" method="POST" action="/lifts/delete">
                 <input type="hidden" name="delete_lift_id" value="{{ lift.LiftID }}">
-                    <input type="submit" value="Delete">
+                    <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this lift: {{ lift.LiftName }}? All assosciated lift rides will also be deleted.')">
                 </form>
                 </td>
 
