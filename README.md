@@ -2,7 +2,7 @@
 # Most code is based on and adapted from the CS 340 starter code including:
 1. app routes and app.py
     adapted to fit our needs 
-2. tempates 
+2. templates 
     adapted to improve UX
 3. Stored Procedures to handle CRUD
     adapted to fit our needs
@@ -57,6 +57,18 @@ Links to an external site.
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
 
+# Date: 3/11/26 
+       # Prompts used to debug logic for to delete skierslifts button error handling
+       # Provided gemini my roll back error handling results and asked it to show exist handler options. 
+4      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
+# Date: 3/12/26 
+4      # Prompts used to consult on the usage of cursor.nextset() in Trails
+       # Requested scenarios where the cursor moves the next result set.
+       # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
+Links to an external site. 
+
 # Date: 3/13/26 
        # Prompts used to add logic for to update rentals button
 4      # I provided my route and asked for an update form that only appears after the button is pressed and is automatically filled with the row ID 
@@ -75,5 +87,6 @@ Links to an external site.
        # Asked Gemini for a modern mountain theme for my Ski resort with appropriate colors. I applied the changes and tested manually making changes so that everything looked consistent, often making tweaks to the templates as well. I then copied and pasted my .css back into gemini because I couldn't figure out how to make my "edit skier" form fit in the table. Gemini output the final result which is used for submission.
 7      # I Source URL: https://www.google.com/search?sourceid=chrome&udm=50&aep=42&source=chrome.crn.rb
 Links to an external site. 
+
 
 

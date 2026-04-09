@@ -528,3 +528,26 @@ BEGIN
 
 END //
 DELIMITER ;
+
+
+-- Create Trails SP:
+DROP PROCEDURE IF EXISTS sp_CreateTrail;
+
+DELIMITER //
+create procedure sp_CreateTrail(
+    in t_name varchar(45),
+    in t_difficulty varchar(255),
+    in t_trailLength varchar(11),
+    in t_status varchar(255),
+    out t_id int)
+BEGIN
+	insert INTO Trails(TrailName, Difficulty, TrailLength, Status)
+    VALUES (t_name, t_difficulty, t_trailLength, t_status);
+    
+    -- store the skier id of the last inserted row:
+    select last_insert_id() into t_id;
+    -- then display id of the last inserted row
+    select last_insert_id() AS 't_new_id';
+   
+END //
+DELIMITER ;  
